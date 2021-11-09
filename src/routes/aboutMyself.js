@@ -8,5 +8,6 @@ router.post('/post', useControllers.post)
 router.post('/post/data-bio/:_id', useControllers.postDataBio)
 router.put('/put/:_id', useControllers.put)
 router.put('/put/data-bio/:_id/:id', useControllers.putDataBio)
+router.get('/get', useControllers.getAll)
 
 module.exports = router

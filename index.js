@@ -23,6 +23,7 @@ const aboutMyselfRoutes = require('./src/routes/aboutMyself')
 const feedbackRoutes = require('./src/routes/feedback')
 const ourOfferedServicesRoutes = require('./src/routes/ourOfferedServices')
 const servicingHoursRoutes = require('./src/routes/servicingHours')
+const blogRoutes = require('./src/routes/blog')
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb)=>{
@@ -52,6 +53,7 @@ app.use('/v5/about-myself', aboutMyselfRoutes)
 app.use('/v6/feedback', feedbackRoutes)
 app.use('/v7/our-offered-services', ourOfferedServicesRoutes)
 app.use('/v8/servicing-hours', servicingHoursRoutes)
+app.use('/v9/blog', blogRoutes)
 
 app.use((error, req, res, next)=>{
     const status = error.errorStatus || 500

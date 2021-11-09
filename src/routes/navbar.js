@@ -13,5 +13,6 @@ router.put('/put/link-medsos/:_id', useControllers.putLinkMedsos)
 router.put('/put/logo-web/:_id', useControllers.putLogoWeb)
 router.put('/put/menu-page/:_id', useControllers.putMenuPage)
 router.put('/put/menu-page/menu-collapse/:_id/:id', useControllers.putMenuCollapse)
+router.get('/get', useControllers.getAll)
 
 module.exports = router

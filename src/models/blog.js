@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const servicingHours = new Schema({
+const blog = new Schema({
     id: {
         type: String
     },
@@ -12,44 +12,44 @@ const servicingHours = new Schema({
     deskripsi: {
         type: String
     },
+    image: {
+        type: String
+    },
+    paragraphSatu :{
+        type: String
+    },
+    paragraphHighlight:{
+        type: String
+    },
+    paragraphDua:{
+        type: String
+    },
+    category:{
+        type: String
+    },
+    date: {
+        type: String
+    },
+    path:{
+        type: String
+    },
+    comments: {
+        type: Array
+    },
     data: {
         type: Array
     },
-    day: {
-        type: String
-    },
-    time: {
-        type: String
-    },
-    diseaseType: {
+    imageDetailContent: {
         type: Array
     },
-    jenis:{
+    idCategory:{
         type: String
     },
-    userAppointmentData:{
-        type: Array
-    },
-    patientName:{
-        type: String
-    },
-    phone:{
-        type: String
-    },
-    emailAddress: {
-        type: String
-    },
-    dateOfBirth:{
-        type: String
-    },
-    appointmentDate:{
-        type: String
-    },
-    message: {
+    clock:{
         type: String
     }
 },{
     timestamps: true
 })
 
-module.exports = mongoose.model('servicing-hours', servicingHours)
+module.exports = mongoose.model('blog', blog)

@@ -104,3 +104,22 @@ exports.putDataImg = (req, res, next)=>{
     })
     .catch(err=>console.log(err))
 }
+
+exports.getAll = (req, res, next)=>{
+    let totalItems
+    
+    procedureCategory.find()
+    .countDocuments()
+    .then(count=>{
+        totalItems = count
+        return procedureCategory.find()
+    })
+    .then(result=>{
+        res.status(200).json({
+            message: "semua data di dapatkan",
+            data: result,
+            totalData: totalItems
+        })
+    })
+    .catch(err=>next(err))
+}

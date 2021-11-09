@@ -52,3 +52,22 @@ exports.putHeaderAllPage = (req, res, next)=>{
     })
     .catch(err=>next(err))
 }
+
+exports.getAll = (req, res, next)=>{
+    let totalItems
+    
+    headerPage.find()
+    .countDocuments()
+    .then(count=>{
+        totalItems = count
+        return headerPage.find()
+    })
+    .then(result=>{
+        res.status(200).json({
+            message: "semua data di dapatkan",
+            data: result,
+            totalData: totalItems
+        })
+    })
+    .catch(err=>next(err))
+}

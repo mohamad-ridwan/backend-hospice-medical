@@ -97,3 +97,22 @@ exports.putContactUs = (req, res, next)=>{
     })
     .catch(err=>next(err))
 }
+
+exports.getAll = (req, res, next)=>{
+    let totalItems
+    
+    footer.find()
+    .countDocuments()
+    .then(count=>{
+        totalItems = count
+        return footer.find()
+    })
+    .then(result=>{
+        res.status(200).json({
+            message: "semua data di dapatkan",
+            data: result,
+            totalData: totalItems
+        })
+    })
+    .catch(err=>next(err))
+}
