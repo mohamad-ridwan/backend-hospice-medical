@@ -156,6 +156,52 @@ exports.putData = (req, res, next)=>{
     }
 }
 
+exports.putMedsos = (req, res, next)=>{
+    const property = req.params.property
+    const _id = req.params._id
+    const id = req.params.id
+    const idMedsos = req.params.idMedsos
+
+    const nameIcon = req.body.nameIcon
+    const path = req.body.path
+
+    const updateDocumentNameIcon = {
+        $set: {"data.$[outer].medsos.$[inner].nameIcon": nameIcon}
+    }
+    const updateDocumentPath = {
+        $set: {"data.$[outer].medsos.$[inner].path": path}
+    }
+
+    const options = {
+        arrayFilters: [
+            {"outer.id": id},
+            {"inner.id": idMedsos}
+        ]
+    }
+    
+    function update(document, filters){
+        doctors.updateOne({_id: _id}, document, filters)
+        .then(result=>{
+            res.status(201).json({
+                message: `${property} profile doctors berhasil di update`,
+                data: result
+            })
+        })
+        .catch(err=>console.log(err))
+    }
+
+    if(property === "nameIcon"){
+        update(updateDocumentNameIcon, options)
+    } else if(property === "path"){
+        update(updateDocumentPath, options)
+    } else {
+        return res.status(404).json({
+            error: `/v10/doctors/put/profile-doctors/data/medsos/${property}/${id}`,
+            message: `tidak ada property yang bernama ${property}`
+        })
+    }
+}
+
 exports.get = (req, res, next)=>{
     let totalItems
     
