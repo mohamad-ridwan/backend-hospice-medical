@@ -82,7 +82,7 @@ exports.postBlogsDataForAllDocument = (req, res, next)=>{
         title: title,
         paragraphSatu: paragraphSatu,
         paragraphHighlight: paragraphHighlight,
-        imageDetailContent: [],
+        imageDetailContent: {},
         paragraphDua: paragraphDua,
         category: category,
         date: date,
@@ -123,6 +123,43 @@ exports.postImgDetailContent = (req, res, next)=>{
     .then(result=>{
         res.status(201).json({
             message: "image detail content berhasil di post",
+            data: result
+        })
+    })
+    .catch(err=>console.log(err))
+}
+
+exports.postComments = (req, res, next)=>{
+    const _id = req.params._id
+    const id = req.params.id
+
+    const reqId = req.body.id
+    const name = req.body.name
+    const email = req.body.email
+    const subject = req.body.subject
+    const message = req.body.message
+    const image = req.body.image
+    const times = req.body.times
+
+    const data = {
+        id: reqId,
+        name: name,
+        email: email,
+        subject: subject,
+        message: message,
+        image: image,
+        times: times
+    }
+
+    const updateDocument = {
+        $push: {"data.$.comments": data},
+        upsert: true
+    }
+
+    blog.updateOne({_id: _id, "data.id": id}, updateDocument)
+    .then(result=>{
+        res.status(201).json({
+            message: 'user berhasil post comments',
             data: result
         })
     })

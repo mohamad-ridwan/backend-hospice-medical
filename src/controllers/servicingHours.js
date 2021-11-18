@@ -69,7 +69,6 @@ exports.postBookAnAppointment = (req, res, next)=>{
 
 exports.postDiseaseType = (req, res,next)=>{
     const _id = req.params._id
-    const id = req.params.id
 
     const jenis = req.body.jenis
 
@@ -99,6 +98,7 @@ exports.postUserAppointmentData = (req, res, next)=>{
     const phone = req.body.phone
     const emailAddress = req.body.emailAddress
     const dateOfBirth = req.body.dateOfBirth
+    const jenisPenyakit = req.body.jenisPenyakit
     const appointmentDate = req.body.appointmentDate
     const message = req.body.message
 
@@ -108,6 +108,7 @@ exports.postUserAppointmentData = (req, res, next)=>{
         phone: phone,
         emailAddress: emailAddress,
         dateOfBirth: dateOfBirth,
+        jenisPenyakit: jenisPenyakit,
         appointmentDate: appointmentDate,
         message: message
     }

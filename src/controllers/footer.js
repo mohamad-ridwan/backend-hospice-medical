@@ -27,9 +27,11 @@ exports.postContactUs = (req, res, next)=>{
 
 exports.postNewsletter = (req, res, next)=>{
     const id = req.body.id
+    const title = req.body.title
 
     const post = new footer({
         id: id,
+        title: title,
         data: []
     })
 
@@ -92,6 +94,32 @@ exports.putContactUs = (req, res, next)=>{
     .then(result=>{
         res.status(201).json({
             message: "contact us berhasil di update",
+            data: result
+        })
+    })
+    .catch(err=>next(err))
+}
+
+exports.putNewsletter = (req, res, next)=>{
+    const _id = req.params._id
+
+    const title = req.body.title
+
+    footer.findById(_id)
+    .then(post=>{
+        if(!post){
+            const err = new Error('data tidak ada')
+            err.errorStatus = 404
+            throw err
+        }
+
+        post.title = title
+
+        return post.save()
+    })
+    .then(result=>{
+        res.status(201).json({
+            message: 'title newsletter berhasil di update',
             data: result
         })
     })

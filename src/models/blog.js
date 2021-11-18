@@ -40,12 +40,27 @@ const blog = new Schema({
         type: Array
     },
     imageDetailContent: {
-        type: Array
+        type: Object
     },
     idCategory:{
         type: String
     },
     clock:{
+        type: String
+    },
+    name: {
+        type: String
+    },
+    email: {
+        type: String
+    },
+    subject:{
+        type: String
+    },
+    message: {
+        type: String
+    },
+    times: {
         type: String
     }
 },{

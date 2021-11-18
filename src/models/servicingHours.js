@@ -42,6 +42,9 @@ const servicingHours = new Schema({
     dateOfBirth:{
         type: String
     },
+    jenisPenyakit: {
+      type: String  
+    },
     appointmentDate:{
         type: String
     },

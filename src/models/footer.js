@@ -20,6 +20,9 @@ const footer = new Schema({
     },
     data: {
         type: Array
+    },
+    title: {
+        type: String
     }
 },{
     timestamps: true
