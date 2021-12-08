@@ -18,6 +18,9 @@ const blog = new Schema({
     paragraphSatu :{
         type: String
     },
+    paragraphBeforeHighlight:{
+        type: String
+    },
     paragraphHighlight:{
         type: String
     },
