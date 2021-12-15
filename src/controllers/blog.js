@@ -88,26 +88,27 @@ exports.postBlogsDataForAllDocument = (req, res, next) => {
     const clock = `${hours}:${minute}`
     const path = `${category.split(' ').join('-').toLowerCase()}/${title.split(' ').join('-').toLowerCase()}`
 
-    const data = {
-        id: id,
-        image: image,
-        title: title,
-        paragraphSatu: paragraphSatu,
-        paragraphBeforeHighlight: paragraphBeforeHighlight,
-        paragraphHighlight: paragraphHighlight,
-        imageDetailContent: {},
-        paragraphDua: paragraphDua,
-        category: category,
-        date: date,
-        clock: clock,
-        path: path,
-        comments: []
-    }
+    const data = [
+        {
+            id: id,
+            image: image,
+            title: title,
+            paragraphSatu: paragraphSatu,
+            paragraphBeforeHighlight: paragraphBeforeHighlight,
+            paragraphHighlight: paragraphHighlight,
+            imageDetailContent: {},
+            paragraphDua: paragraphDua,
+            category: category,
+            date: date,
+            clock: clock,
+            path: path,
+            comments: []
+        }
+    ]
 
     blog.updateOne(
         { _id: _id },
-        { $push: { data: data } },
-        { upsert: true }
+        { $push: { data: { $each: data, $position: 0 } } }
     )
         .then(result => {
             res.status(201).json({
@@ -154,7 +155,7 @@ exports.postComments = (req, res, next) => {
     const image = req.body.image
     const times = req.body.times
 
-    const data = {
+    const data = [{
         id: reqId,
         name: name,
         email: email,
@@ -162,11 +163,10 @@ exports.postComments = (req, res, next) => {
         message: message,
         image: image,
         times: times
-    }
+    }]
 
     const updateDocument = {
-        $push: { "data.$.comments": data },
-        upsert: true
+        $push: { "data.$.comments": {$each: data, $position: 0} }
     }
 
     blog.updateOne({ _id: _id, "data.id": id }, updateDocument)
@@ -291,9 +291,9 @@ exports.putBlogsDataForAllDocument = (req, res, next) => {
         updateDocument(updateDocumentTitle, "title")
     } else if (property === "paragraphSatu") {
         updateDocument(updateDocumentParagraphSatu, "paragraphSatu")
-    }else if(property === "paragraphBeforeHighlight"){
+    } else if (property === "paragraphBeforeHighlight") {
         updateDocument(updateDocumentParagraphBeforeHighlight, "paragraphBeforeHighlight")
-    }else if (property === "paragraphHighlight") {
+    } else if (property === "paragraphHighlight") {
         updateDocument(updateDocumentParagraphHightlight, "paragraphHightlight")
     } else if (property === "paragraphDua") {
         updateDocument(updateDocumentParagraphDua, "paragraphDua")
