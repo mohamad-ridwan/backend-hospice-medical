@@ -4,7 +4,7 @@ exports.post = (req, res, next) => {
     const id = `${new Date().getTime()}`
     const name = req.body.name
     const email = req.body.email
-    const image = req.file.path
+    const image = req.body.image
     const password = req.body.password
 
     const post = new users({
