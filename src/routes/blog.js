@@ -12,5 +12,6 @@ router.post('/post/all-document/data/comments/:_id/:id', useControllers.postComm
 router.put('/put/blogs-home-or-blogs-page/:_id', useControllers.putBlogsHomeOrBlogsPage)
 router.put('/put/all-document/data/:property/:_id/:id', useControllers.putBlogsDataForAllDocument)
 router.get('/get', useControllers.getAll)
+router.delete('/delete/blog/data/comments/:_idBlog/:idUserComment/:index', useControllers.deleteComment)
 
 module.exports = router

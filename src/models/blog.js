@@ -51,6 +51,9 @@ const blog = new Schema({
     clock:{
         type: String
     },
+    idUserComment: {
+        type: String
+    },
     name: {
         type: String
     },

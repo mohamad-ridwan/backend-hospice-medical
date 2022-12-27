@@ -148,6 +148,7 @@ exports.postComments = (req, res, next) => {
     const id = req.params.id
 
     const reqId = req.body.id
+    const idUserComment = req.body.idUserComment
     const name = req.body.name
     const email = req.body.email
     const subject = req.body.subject
@@ -157,6 +158,7 @@ exports.postComments = (req, res, next) => {
 
     const data = [{
         id: reqId,
+        idUserComment: idUserComment,
         name: name,
         email: email,
         subject: subject,
@@ -166,7 +168,7 @@ exports.postComments = (req, res, next) => {
     }]
 
     const updateDocument = {
-        $push: { "data.$.comments": {$each: data, $position: 0} }
+        $push: { "data.$.comments": { $each: data, $position: 0 } }
     }
 
     blog.updateOne({ _id: _id, "data.id": id }, updateDocument)
@@ -330,4 +332,22 @@ exports.getAll = (req, res, next) => {
             })
         })
         .catch(err => next(err))
+}
+
+exports.deleteComment = (req, res, next) => {
+    const _idblog = req.params._idBlog
+    const idUserComment = req.params.idUserComment
+    const index = req.params.index
+
+    blog.updateOne(
+        {_id: _idblog},
+        {$pull: {[`data.${index}.comments`] : {idUserComment: idUserComment}}}
+    )
+    .then(result=>{
+        res.status(200).json({
+            message: 'user comment berhasil di delete',
+            data: result
+        })
+    })
+    .catch(err=>console.log(err))
 }
