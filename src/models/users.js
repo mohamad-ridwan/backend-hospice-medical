@@ -17,6 +17,9 @@ const users = new Schema({
     },
     password: {
         type: String
+    },
+    isVerification: {
+        type: Boolean
     }
 }, {
     timestamp: true
