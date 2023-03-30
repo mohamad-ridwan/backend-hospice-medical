@@ -11,6 +11,7 @@ router.post('/post/all-document/data/image-detail-content/:_id/:id', useControll
 router.post('/post/all-document/data/comments/:_id/:id', useControllers.postComments)
 router.put('/put/blogs-home-or-blogs-page/:_id', useControllers.putBlogsHomeOrBlogsPage)
 router.put('/put/all-document/data/:property/:_id/:id', useControllers.putBlogsDataForAllDocument)
+router.put('/put/profile-user-comment/every-article/data/comments/:id', useControllers.putProfileUserComment)
 router.get('/get', useControllers.getAll)
 router.delete('/delete/blog/data/comments/:_idBlog/:idUserComment/:index', useControllers.deleteComment)
 

@@ -315,6 +315,36 @@ exports.putBlogsDataForAllDocument = (req, res, next) => {
     }
 }
 
+exports.putProfileUserComment = (req, res, next) => {
+    const id = req.params.id
+    const name = req.body.name
+    const image = req.body.image
+
+    const updateDocument = {
+        $set: {
+            "data.$[comments].comments.$[id].name": name,
+            "data.$[comments].comments.$[id].image": image,
+        }
+    }
+
+    const options = {
+        arrayFilters: [
+            { "comments.comments.id": id },
+            { "id.id": id }
+        ]
+    }
+
+    blog.updateMany({}, updateDocument, options)
+    .then(result=>{
+        res.status(201).json({
+            message: 'user profile on comments is updated',
+            userFromId: id,
+            data: result
+        })
+    })
+    .catch(err => console.log(err))
+}
+
 exports.getAll = (req, res, next) => {
     let totalItems
 
@@ -340,14 +370,14 @@ exports.deleteComment = (req, res, next) => {
     const index = req.params.index
 
     blog.updateOne(
-        {_id: _idblog},
-        {$pull: {[`data.${index}.comments`] : {idUserComment: idUserComment}}}
+        { _id: _idblog },
+        { $pull: { [`data.${index}.comments`]: { idUserComment: idUserComment } } }
     )
-    .then(result=>{
-        res.status(200).json({
-            message: 'user comment berhasil di delete',
-            data: result
+        .then(result => {
+            res.status(200).json({
+                message: 'user comment berhasil di delete',
+                data: result
+            })
         })
-    })
-    .catch(err=>console.log(err))
+        .catch(err => console.log(err))
 }
