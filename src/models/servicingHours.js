@@ -50,6 +50,9 @@ const servicingHours = new Schema({
     },
     message: {
         type: String
+    },
+    isConfirm: {
+        type: Object
     }
 },{
     timestamps: true

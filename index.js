@@ -42,6 +42,7 @@ const doctorsRoutes = require('./src/routes/doctors')
 const contactRoutes = require('./src/routes/contact')
 const usersRoutes = require('./src/routes/users')
 const verificationRoutes = require('./src/routes/verification')
+const adminRoutes = require('./src/routes/admin')
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb)=>{
@@ -76,6 +77,7 @@ app.use('/v10/doctors', doctorsRoutes)
 app.use('/v11/contact', contactRoutes)
 app.use('/v12/users', usersRoutes)
 app.use('/v13/verification', verificationRoutes)
+app.use('/v14/admin', adminRoutes)
 
 app.use((error, req, res, next)=>{
     const status = error.errorStatus || 500

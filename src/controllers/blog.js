@@ -1,5 +1,7 @@
 const blog = require('../models/blog')
 
+const regexSpecialCharacters = /\W|_/g
+
 exports.postBlogsHomeOrBlogsPage = (req, res, next) => {
     const id = req.body.id
     const image = !req.file ? null : req.file.path
@@ -66,27 +68,27 @@ exports.postBlogsDataForAllDocument = (req, res, next) => {
     const _id = req.params._id
 
     // clock
-    const hours = new Date().getHours().toString().length === 1 ? `0${new Date().getHours()}` : new Date().getHours()
-    const minute = new Date().getMinutes().toString().length === 1 ? `${new Date().getMinutes()}` : new Date().getMinutes()
+    // const hours = new Date().getHours().toString().length === 1 ? `0${new Date().getHours()}` : new Date().getHours()
+    // const minute = new Date().getMinutes().toString().length === 1 ? `${new Date().getMinutes()}` : new Date().getMinutes()
 
     // date
-    const nameMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    // const nameMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-    const dateNumber = new Date().getDate().toString().length === 1 ? `0${new Date().getDate()}` : new Date().getDate()
-    const mount = new Date().getMonth()
-    const years = new Date().getFullYear()
+    // const dateNumber = new Date().getDate().toString().length === 1 ? `0${new Date().getDate()}` : new Date().getDate()
+    // const mount = new Date().getMonth()
+    // const years = new Date().getFullYear()
 
-    const id = `${new Date().getTime()}`
-    const image = req.file.path
+    const id = req.body.id
+    const image = req.body.image
     const title = req.body.title
     const paragraphSatu = req.body.paragraphSatu
     const paragraphBeforeHighlight = req.body.paragraphBeforeHighlight
     const paragraphHighlight = req.body.paragraphHighlight
     const paragraphDua = req.body.paragraphDua
     const category = req.body.category
-    const date = `${dateNumber} ${nameMonth[mount]}, ${years}`
-    const clock = `${hours}:${minute}`
-    const path = `${category.split(' ').join('-').toLowerCase()}/${title.split(' ').join('-').toLowerCase()}`
+    const date = req.body.date
+    const clock = req.body.clock
+    const path = `${category.split(' ').join('-').toLowerCase()}/${title.replace(regexSpecialCharacters, '-').toLowerCase()}`
 
     const data = [
         {
@@ -113,7 +115,8 @@ exports.postBlogsDataForAllDocument = (req, res, next) => {
         .then(result => {
             res.status(201).json({
                 message: "data content berhasil di post",
-                data: result
+                data: result,
+                idBlog: id
             })
         })
         .catch(err => console.log(err))
@@ -123,7 +126,7 @@ exports.postImgDetailContent = (req, res, next) => {
     const _id = req.params._id
     const id = req.params.id
 
-    const image = req.file.path
+    const image = req.body.image
 
     const data = {
         image: image

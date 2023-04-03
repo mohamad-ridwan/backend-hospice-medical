@@ -110,12 +110,13 @@ exports.postUserAppointmentData = (req, res, next)=>{
         dateOfBirth: dateOfBirth,
         jenisPenyakit: jenisPenyakit,
         appointmentDate: appointmentDate,
-        message: message
+        message: message,
+        isConfirm: {}
     }
 
     servicingHours.updateOne(
         {_id: _id},
-        {$push: {userAppointmentData: data}},
+        {$push: {userAppointmentData: {$each: [data], $position: 0}}},
         {upsert: true}
     )
     .then(result=>{
@@ -125,6 +126,50 @@ exports.postUserAppointmentData = (req, res, next)=>{
         })
     })
     .catch(err=>console.log(err))
+}
+
+exports.postConfirmAppointmentDate = (req, res, next)=>{
+    const _id = req.params._id
+    const id = req.params.id
+
+    const newId = `${new Date().getTime()}`
+    const message = req.body.message
+    const emailAdmin = req.body.emailAdmin
+    const dateConfirm = req.body.dateConfirm
+    const nameDoctor = req.body.doctorInfo.nameDoctor
+    const doctorSpecialist = req.body.doctorInfo.doctorSpecialist
+    const queueNumber = req.body.queueNumber
+    const roomNumber = req.body.roomInfo.roomNumber
+    const roomName = req.body.roomInfo.roomName
+
+    const data = {
+        id: newId,
+        message,
+        emailAdmin,
+        dateConfirm,
+        doctorInfo: {
+            nameDoctor,
+            doctorSpecialist
+        },
+        queueNumber,
+        roomInfo: {
+            roomNumber,
+            roomName,
+        }
+    }
+
+    const updateDocument = {
+        $set: { "userAppointmentData.$.isConfirm": data },
+    }
+
+    servicingHours.updateOne({ _id: _id, "userAppointmentData.id": id }, updateDocument)
+        .then(result => {
+            res.status(201).json({
+                message: "user appointment date is confirm",
+                data: result
+            })
+        })
+        .catch(err => console.log(err))
 }
 
 exports.putServicing = (req, res, next)=>{
