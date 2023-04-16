@@ -43,6 +43,7 @@ const contactRoutes = require('./src/routes/contact')
 const usersRoutes = require('./src/routes/users')
 const verificationRoutes = require('./src/routes/verification')
 const adminRoutes = require('./src/routes/admin')
+const blackListJwtRoutes = require('./src/routes/blackListJwt')
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb)=>{
@@ -59,7 +60,7 @@ app.use(multer({storage: fileStorage}).single('image'))
 app.use((req, res, next)=>{
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Credential", "true")
-    res.header("Access-Control-Allow-Headers", "Origin, Authorization, X-Requested-With, Content-Type, Accept")
+    res.header("Access-Control-Allow-Headers", "Origin, Authorization, X-Requested-With, Content-Type, Accept, Jwt-Token")
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
     next()
 })
@@ -78,6 +79,7 @@ app.use('/v11/contact', contactRoutes)
 app.use('/v12/users', usersRoutes)
 app.use('/v13/verification', verificationRoutes)
 app.use('/v14/admin', adminRoutes)
+app.use('/v15/black-list-jwt', blackListJwtRoutes)
 
 app.use((error, req, res, next)=>{
     const status = error.errorStatus || 500
