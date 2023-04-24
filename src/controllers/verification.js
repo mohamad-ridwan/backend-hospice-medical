@@ -1,5 +1,6 @@
 const verificationModel = require('../models/verification')
 const users = require('../models/users')
+const admin = require('../models/admin')
 const jwt = require('jsonwebtoken')
 
 exports.post = (req, res) => {
@@ -75,10 +76,14 @@ exports.put = (req, res, next) => {
 // verif create-new-password
 exports.jwtCreateNewPassword = async (req, res, next) => {
     const userId = req.params.userId
+    const role = req.params.role
     const checkUser = await users.findOne({ id: userId })
+    const checkAdmin = await admin.findOne({ id: userId })
 
-    if (!checkUser) {
+    if (role === 'user' && !checkUser) {
         return res.status(400).json({ error: 'user not found!' })
+    }else if(role === 'admin' && !checkAdmin){
+        return res.status(400).json({ error: 'admin not found!' })
     }
 
     const token = jwt.sign({
