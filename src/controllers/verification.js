@@ -82,26 +82,45 @@ exports.jwtCreateNewPassword = async (req, res, next) => {
 
     if (role === 'user' && !checkUser) {
         return res.status(400).json({ error: 'user not found!' })
-    }else if(role === 'admin' && !checkAdmin){
+    } else if (role === 'admin' && !checkAdmin) {
         return res.status(400).json({ error: 'admin not found!' })
     }
 
-    const token = jwt.sign({
-        userData: {
-            _id: checkUser._id,
-            id: checkUser.id,
-            name: checkUser.name,
-            email: checkUser.email,
-            image: checkUser.image,
-            password: checkUser.password,
-            isVerification: checkUser.isVerification
-        }
-    }, process.env.TOKEN_SECRET, { expiresIn: '1h' })
+    if (role === 'user') {
+        const token = jwt.sign({
+            userData: {
+                _id: checkUser._id,
+                id: checkUser.id,
+                name: checkUser.name,
+                email: checkUser.email,
+                image: checkUser.image,
+                password: checkUser.password,
+                isVerification: checkUser.isVerification
+            }
+        }, process.env.TOKEN_SECRET, { expiresIn: '1h' })
 
-    res.header("Jwt-Token", token).json({
-        error: null,
-        token: token
-    })
+        res.header("Jwt-Token", token).json({
+            error: null,
+            token: token
+        })
+    } else if (role === 'admin') {
+        const token = jwt.sign({
+            userData: {
+                _id: checkAdmin._id,
+                id: checkAdmin.id,
+                name: checkAdmin.name,
+                email: checkAdmin.email,
+                image: checkAdmin.image,
+                password: checkAdmin.password,
+                isVerification: checkAdmin.isVerification
+            }
+        }, process.env.TOKEN_SECRET, { expiresIn: '1h' })
+
+        res.header("Jwt-Token", token).json({
+            error: null,
+            token: token
+        })
+    }
 }
 
 exports.getTokenJwt = async (req, res, next) => {
