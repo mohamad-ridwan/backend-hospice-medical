@@ -51,8 +51,17 @@ const servicingHours = new Schema({
     message: {
         type: String
     },
+    submissionDate: {
+        type: String
+    },
+    clock: {
+        type: String
+    },
     isConfirm: {
         type: Object
+    },
+    isNotif: {
+        type: Boolean
     }
 },{
     timestamps: true

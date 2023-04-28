@@ -101,6 +101,9 @@ exports.postUserAppointmentData = (req, res, next)=>{
     const jenisPenyakit = req.body.jenisPenyakit
     const appointmentDate = req.body.appointmentDate
     const message = req.body.message
+    const submissionDate = req.body.submissionDate
+    const clock = req.body.clock
+    const isNotif = false
 
     const data = {
         id: id,
@@ -111,6 +114,9 @@ exports.postUserAppointmentData = (req, res, next)=>{
         jenisPenyakit: jenisPenyakit,
         appointmentDate: appointmentDate,
         message: message,
+        submissionDate: submissionDate,
+        clock: clock,
+        isNotif,
         isConfirm: {}
     }
 
