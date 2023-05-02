@@ -255,6 +255,73 @@ exports.putDiseaseType = (req, res, next)=>{
     .catch(err=>console.log(err))
 }
 
+exports.putIsNotif = (req, res, next)=>{
+    const _id = req.params._id
+    const id = req.params.id
+
+    const isNotif = true
+
+    // const options = {
+    //     'userAppointmentData.id': id
+    // }
+
+    const updateDocument = {
+        $set: {"userAppointmentData.$.isNotif": isNotif}
+    }
+
+    servicingHours.updateOne({
+        _id: _id,
+        'userAppointmentData.id': id
+    }, updateDocument)
+    .then(result=>{
+        res.status(201).json({
+            message: 'notifikasi telah update',
+            data: result
+        })
+    })
+    .catch(err=>console.log(err))
+}
+
+exports.putPatientRegistration = (req, res, next)=>{
+    const _id = req.params._id
+    const id = req.params.id
+
+    const jenisPenyakit = req.body.jenisPenyakit
+    const appointmentDate = req.body.appointmentDate
+    const submissionDate = req.body.submissionDate
+    const patientName = req.body.patientName
+    const emailAddress = req.body.emailAddress
+    const dateOfBirth = req.body.dateOfBirth
+    const phone = req.body.phone
+
+    const updateDocument = {
+        $set: {
+            "userAppointmentData.$[filter].jenisPenyakit": jenisPenyakit,
+            "userAppointmentData.$[filter].appointmentDate": appointmentDate,
+            "userAppointmentData.$[filter].submissionDate": submissionDate,
+            "userAppointmentData.$[filter].patientName": patientName,
+            "userAppointmentData.$[filter].emailAddress": emailAddress,
+            "userAppointmentData.$[filter].dateOfBirth": dateOfBirth,
+            "userAppointmentData.$[filter].phone": phone,
+        }
+    }
+
+    const options = {
+        arrayFilters: [
+            {'filter.id': id}
+        ]
+    }
+
+    servicingHours.updateOne({_id: _id}, updateDocument, options)
+    .then(result=>{
+        res.status(201).json({
+            message: 'patient registration data is updated',
+            data: result
+        })
+    })
+    .catch(err=>console.log(err))
+}
+
 exports.getAll = (req, res, next)=>{
     let totalItems
     

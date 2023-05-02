@@ -13,6 +13,8 @@ router.post('/post/book-an-appointment/user-appointment-data/is-confirm/:_id/:id
 router.put('/put/servicing/:_id', useControllers.putServicing)
 router.put('/put/servicing/data/:_id/:id', useControllers.putServicingData)
 router.put('/put/book-an-appointment/disease-type/:_id/:jenis', useControllers.putDiseaseType)
+router.put('/put/book-an-appointment/user-appointment-data/:_id/:id/is-notif', useControllers.putIsNotif)
+router.put('/put/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id', useControllers.putPatientRegistration)
 router.get('/get', useControllers.getAll)
 
 module.exports = router
