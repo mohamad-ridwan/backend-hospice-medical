@@ -16,5 +16,6 @@ router.put('/put/book-an-appointment/disease-type/:_id/:jenis', useControllers.p
 router.put('/put/book-an-appointment/user-appointment-data/:_id/:id/is-notif', useControllers.putIsNotif)
 router.put('/put/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id', useControllers.putPatientRegistration)
 router.get('/get', useControllers.getAll)
+router.delete('/delete/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id', useControllers.deletePatientRegistration)
 
 module.exports = router

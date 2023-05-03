@@ -340,3 +340,21 @@ exports.getAll = (req, res, next)=>{
     })
     .catch(err=>next(err))
 }
+
+exports.deletePatientRegistration = (req, res, next)=>{
+    const _id = req.params._id
+    const id = req.params.id
+
+    servicingHours.updateOne(
+        { _id: _id },
+        { $pull: { userAppointmentData: { id: id } } },
+        { upsert: true }
+    )
+    .then(result => {
+        res.status(200).json({
+            message: 'personal data info patient registration berhasil dihapus',
+            data: result
+        })
+    })
+    .catch(err => console.log(err))
+}
