@@ -142,26 +142,32 @@ exports.postConfirmAppointmentDate = (req, res, next)=>{
     const message = req.body.message
     const emailAdmin = req.body.emailAdmin
     const dateConfirm = req.body.dateConfirm
+    const confirmHour = req.body.confirmHour
+    const treatmentHours = req.body.treatmentHours
     const nameDoctor = req.body.doctorInfo.nameDoctor
     const doctorSpecialist = req.body.doctorInfo.doctorSpecialist
     const queueNumber = req.body.queueNumber
-    const roomNumber = req.body.roomInfo.roomNumber
+    // const roomNumber = req.body.roomInfo.roomNumber
     const roomName = req.body.roomInfo.roomName
+    const presence = req.body.presence
 
     const data = {
         id: newId,
         message,
         emailAdmin,
         dateConfirm,
+        confirmHour,
+        treatmentHours,
         doctorInfo: {
             nameDoctor,
             doctorSpecialist
         },
         queueNumber,
         roomInfo: {
-            roomNumber,
+            // roomNumber,
             roomName,
-        }
+        },
+        presence
     }
 
     const updateDocument = {
