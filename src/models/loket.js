@@ -41,6 +41,9 @@ const loket = new Schema({
     },
     loketInfo: {
         type: Array
+    },
+    isConfirm: {
+        type: Object
     }
 }, {
     timestamps: true

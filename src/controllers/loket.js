@@ -14,6 +14,7 @@ exports.post = (req, res, next)=>{
     const message = req.body.message
     const emailAdmin = req.body.emailAdmin
     const isNotif = false
+    const isConfirm = req.body.isConfirm
 
     const post = new loket({
         id,
@@ -28,7 +29,7 @@ exports.post = (req, res, next)=>{
         message,
         emailAdmin,
         isNotif,
-        isConfirm: {}
+        isConfirm
     })
 
     post.save()
@@ -63,6 +64,47 @@ exports.postLoketInfo = (req, res, next)=>{
     .catch(err=>console.log(err))
 }
 
+exports.putPatientQueue = (req, res, next)=>{
+    const _id = req.params._id
+
+    const id = req.body.id
+    const dateConfirm = req.body.dateConfirm
+    const confirmHour = req.body.confirmHour
+    const emailAdmin = req.body.emailAdmin
+    const nameAdmin = req.body.nameAdmin
+    const confirmState = req.body.confirmState
+    const paymentMethod = req.body.paymentInfo.paymentMethod
+    const bpjsNumber = req.body.paymentInfo.bpjsNumber
+    const totalCost = req.body.paymentInfo.totalCost
+
+    const data = {
+        id,
+        dateConfirm,
+        confirmHour,
+        emailAdmin,
+        nameAdmin,
+        confirmState,
+        paymentInfo:{
+            paymentMethod,
+            bpjsNumber,
+            totalCost
+        }
+    }
+
+    const updateDocument = {
+        $set:{'isConfirm': data}
+    }
+
+    loket.updateOne({_id: _id}, updateDocument)
+    .then(result=>{
+        res.status(201).json({
+            message: 'patient in the counter is confirmed',
+            data: result
+        })
+    })
+    .catch(err=>console.log(err))
+}
+
 exports.getAll = (req, res, next)=>{
     let totalItems
     
@@ -80,4 +122,17 @@ exports.getAll = (req, res, next)=>{
         })
     })
     .catch(err=>next(err))
+}
+
+exports.deleteLokets = (req, res, next)=>{
+    const _id = req.params._id
+    
+    loket.deleteOne({_id: _id})
+    .then(result=>{
+        res.status(200).json({
+            message: 'success delete in the loket',
+            data: result
+        })
+    })
+    .catch(err=>console.log(err))
 }
