@@ -6,6 +6,9 @@ const finishedTreatment = new Schema({
     id: {
         type: String
     },
+    rulesTreatment: {
+        type: String
+    },
     patientId: {
         type: String
     },
@@ -18,11 +21,17 @@ const finishedTreatment = new Schema({
     phone:{
         type: String
     },
+    confirmedTime:{
+        type: Object
+    },
     dateConfirm: {
         type: String
     },
     confirmHour:{
         type: String
+    },
+    adminInfo:{
+        type: Object
     },
     emailAdmin:{
         type: String

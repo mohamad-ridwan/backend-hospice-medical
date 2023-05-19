@@ -45,6 +45,7 @@ const verificationRoutes = require('./src/routes/verification')
 const adminRoutes = require('./src/routes/admin')
 const blackListJwtRoutes = require('./src/routes/blackListJwt')
 const loketRoutes = require('./src/routes/loket')
+const finishedTreatmentRoutes = require('./src/routes/finishedTreatment')
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb)=>{
@@ -82,6 +83,7 @@ app.use('/v13/verification', verificationRoutes)
 app.use('/v14/admin', adminRoutes)
 app.use('/v15/black-list-jwt', blackListJwtRoutes)
 app.use('/v16/loket', loketRoutes)
+app.use('/v17/finished-treatment', finishedTreatmentRoutes)
 
 app.use((error, req, res, next)=>{
     const status = error.errorStatus || 500
