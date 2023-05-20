@@ -58,3 +58,16 @@ exports.getAll = (req, res, next)=>{
     })
     .catch(err=>next(err))
 }
+
+exports.deleteItems = (req, res, next)=>{
+    const _id = req.params._id
+    
+    finishedTreatment.deleteOne({_id: _id})
+    .then(result=>{
+        res.status(200).json({
+            message: 'success delete in the finished treatment',
+            data: result
+        })
+    })
+    .catch(err=>console.log(err))
+}
