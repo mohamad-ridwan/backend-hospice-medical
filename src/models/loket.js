@@ -39,6 +39,9 @@ const loket = new Schema({
     isNotif: {
         type: Boolean
     },
+    presence:{
+        type: String
+    },
     loketInfo: {
         type: Array
     },

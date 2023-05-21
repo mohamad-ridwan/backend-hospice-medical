@@ -1,6 +1,6 @@
 const loket = require('../models/loket')
 
-exports.post = (req, res, next)=>{
+exports.post = (req, res, next) => {
     const id = req.body.id
     // patient-queue
     const loketRules = req.body.loketRules
@@ -14,6 +14,7 @@ exports.post = (req, res, next)=>{
     const message = req.body.message
     const emailAdmin = req.body.emailAdmin
     const isNotif = false
+    const presence = req.body.presence
     const isConfirm = req.body.isConfirm
 
     const post = new loket({
@@ -29,20 +30,21 @@ exports.post = (req, res, next)=>{
         message,
         emailAdmin,
         isNotif,
+        presence,
         isConfirm
     })
 
     post.save()
-    .then(result=>{
-        res.status(201).json({
-            message: 'berhasil post data patient ke loket',
-            data: result
+        .then(result => {
+            res.status(201).json({
+                message: 'berhasil post data patient ke loket',
+                data: result
+            })
         })
-    })
-    .catch(err=>console.log(err))
+        .catch(err => console.log(err))
 }
 
-exports.postLoketInfo = (req, res, next)=>{
+exports.postLoketInfo = (req, res, next) => {
     const id = req.body.id
     // info-loket
     const loketRules = req.body.loketRules
@@ -53,18 +55,18 @@ exports.postLoketInfo = (req, res, next)=>{
         loketRules,
         loketInfo
     })
-    
+
     post.save()
-    .then(result=>{
-        res.status(201).json({
-            message: 'berhasil post loket info',
-            data: result
+        .then(result => {
+            res.status(201).json({
+                message: 'berhasil post loket info',
+                data: result
+            })
         })
-    })
-    .catch(err=>console.log(err))
+        .catch(err => console.log(err))
 }
 
-exports.putPatientQueue = (req, res, next)=>{
+exports.putPatientQueue = (req, res, next) => {
     const _id = req.params._id
 
     const id = req.body.id
@@ -84,7 +86,7 @@ exports.putPatientQueue = (req, res, next)=>{
         emailAdmin,
         nameAdmin,
         confirmState,
-        paymentInfo:{
+        paymentInfo: {
             paymentMethod,
             bpjsNumber,
             totalCost
@@ -92,47 +94,73 @@ exports.putPatientQueue = (req, res, next)=>{
     }
 
     const updateDocument = {
-        $set:{'isConfirm': data}
+        $set: { 'isConfirm': data }
     }
 
-    loket.updateOne({_id: _id}, updateDocument)
-    .then(result=>{
-        res.status(201).json({
-            message: 'patient in the counter is confirmed',
-            data: result
+    loket.updateOne({ _id: _id }, updateDocument)
+        .then(result => {
+            res.status(201).json({
+                message: 'patient in the counter is confirmed',
+                data: result
+            })
         })
-    })
-    .catch(err=>console.log(err))
+        .catch(err => console.log(err))
 }
 
-exports.getAll = (req, res, next)=>{
-    let totalItems
-    
-    loket.find()
-    .countDocuments()
-    .then(count=>{
-        totalItems = count
-        return loket.find()
-    })
-    .then(result=>{
-        res.status(200).json({
-            message: "semua data di dapatkan",
-            data: result,
-            totalData: totalItems
-        })
-    })
-    .catch(err=>next(err))
-}
-
-exports.deleteLokets = (req, res, next)=>{
+exports.putPresence = (req, res, next) => {
     const _id = req.params._id
-    
-    loket.deleteOne({_id: _id})
-    .then(result=>{
-        res.status(200).json({
-            message: 'success delete in the loket',
-            data: result
+
+    const presence = req.body.presence
+
+    loket.findById(_id)
+        .then(post => {
+            if (!post) {
+                const err = new Error('data tidak ada')
+                err.errorStatus = 404
+                throw err
+            }
+
+            post.presence = presence
+
+            return post.save()
         })
-    })
-    .catch(err=>console.log(err))
+        .then(result=>{
+            res.status(201).json({
+                message: "presence is updated",
+                data: result
+            })
+        })
+        .catch(err=>next(err))
+}
+
+exports.getAll = (req, res, next) => {
+    let totalItems
+
+    loket.find()
+        .countDocuments()
+        .then(count => {
+            totalItems = count
+            return loket.find()
+        })
+        .then(result => {
+            res.status(200).json({
+                message: "semua data di dapatkan",
+                data: result,
+                totalData: totalItems
+            })
+        })
+        .catch(err => next(err))
+}
+
+exports.deleteLokets = (req, res, next) => {
+    const _id = req.params._id
+
+    loket.deleteOne({ _id: _id })
+        .then(result => {
+            res.status(200).json({
+                message: 'success delete in the loket',
+                data: result
+            })
+        })
+        .catch(err => console.log(err))
 }
