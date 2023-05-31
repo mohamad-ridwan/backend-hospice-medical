@@ -101,6 +101,7 @@ exports.postUserAppointmentData = (req, res, next) => {
     const jenisPenyakit = req.body.jenisPenyakit
     const appointmentDate = req.body.appointmentDate
     const message = req.body.message
+    const patientComplaints = req.body.patientComplaints
     const submissionDate = req.body.submissionDate
     const clock = req.body.clock
     const isNotif = false
@@ -114,6 +115,7 @@ exports.postUserAppointmentData = (req, res, next) => {
         jenisPenyakit: jenisPenyakit,
         appointmentDate: appointmentDate,
         message: message,
+        patientComplaints: patientComplaints,
         submissionDate: submissionDate,
         clock: clock,
         isNotif,

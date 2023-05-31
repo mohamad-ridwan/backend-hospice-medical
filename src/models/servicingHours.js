@@ -51,6 +51,9 @@ const servicingHours = new Schema({
     message: {
         type: String
     },
+    patientComplaints:{
+        type: String
+    },
     submissionDate: {
         type: String
     },
