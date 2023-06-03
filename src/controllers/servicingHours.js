@@ -296,9 +296,10 @@ exports.putPatientRegistration = (req, res, next) => {
     const _id = req.params._id
     const id = req.params.id
 
-    const jenisPenyakit = req.body.jenisPenyakit
+    const patientComplaints = req.body.patientComplaints
     const appointmentDate = req.body.appointmentDate
     const submissionDate = req.body.submissionDate
+    const clock = req.body.clock
     const patientName = req.body.patientName
     const emailAddress = req.body.emailAddress
     const dateOfBirth = req.body.dateOfBirth
@@ -306,9 +307,10 @@ exports.putPatientRegistration = (req, res, next) => {
 
     const updateDocument = {
         $set: {
-            "userAppointmentData.$[filter].jenisPenyakit": jenisPenyakit,
+            "userAppointmentData.$[filter].patientComplaints": patientComplaints,
             "userAppointmentData.$[filter].appointmentDate": appointmentDate,
             "userAppointmentData.$[filter].submissionDate": submissionDate,
+            "userAppointmentData.$[filter].clock": clock,
             "userAppointmentData.$[filter].patientName": patientName,
             "userAppointmentData.$[filter].emailAddress": emailAddress,
             "userAppointmentData.$[filter].dateOfBirth": dateOfBirth,
