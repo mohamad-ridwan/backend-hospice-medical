@@ -447,3 +447,31 @@ exports.deletePatientRegistration = (req, res, next) => {
         })
         .catch(err => console.log(err))
 }
+
+exports.cancelRegistration = (req, res, next)=>{
+    const _id = req.params._id
+    const id = req.params.id
+
+    const isConfirm = {}
+
+    const updateDocument = {
+        $set: {
+            'userAppointmentData.$[filter].isConfirm': isConfirm,
+        }
+    }
+
+    const options = {
+        arrayFilters: [
+            { 'filter.id': id }
+        ]
+    }
+
+    servicingHours.updateOne({ _id: _id }, updateDocument, options)
+        .then(result => {
+            res.status(201).json({
+                message: 'cancel registration is successfully',
+                data: result
+            })
+        })
+        .catch(err => console.log(err))
+}
