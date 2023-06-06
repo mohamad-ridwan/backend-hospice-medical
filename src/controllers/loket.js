@@ -6,7 +6,6 @@ exports.post = (req, res, next) => {
     const loketRules = req.body.loketRules
     const loketName = req.body.loketName
     const patientId = req.body.patientId
-    const jenisPenyakit = req.body.jenisPenyakit
     const patientName = req.body.patientName
     const emailAddress = req.body.emailAddress
     const phone = req.body.phone
@@ -15,6 +14,8 @@ exports.post = (req, res, next) => {
     const emailAdmin = req.body.emailAdmin
     const isNotif = false
     const presence = req.body.presence
+    const submissionDate = req.body.submissionDate
+    const submitHours = req.body.submitHours
     const isConfirm = req.body.isConfirm
 
     const post = new loket({
@@ -22,7 +23,6 @@ exports.post = (req, res, next) => {
         loketRules,
         loketName,
         patientId,
-        jenisPenyakit,
         patientName,
         emailAddress,
         phone,
@@ -31,6 +31,8 @@ exports.post = (req, res, next) => {
         emailAdmin,
         isNotif,
         presence,
+        submissionDate,
+        submitHours,
         isConfirm
     })
 

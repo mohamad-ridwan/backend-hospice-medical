@@ -18,6 +18,12 @@ const loket = new Schema({
     jenisPenyakit: {
         type: String
     },
+    submissionDate:{
+        type: String
+    },
+    submitHours:{
+        type: String
+    },
     patientName: {
         type: String
     },
