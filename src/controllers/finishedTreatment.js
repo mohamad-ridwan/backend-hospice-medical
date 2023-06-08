@@ -40,6 +40,36 @@ exports.postPatientFinishTreatment = (req, res, next)=>{
     .catch(err=>console.log(err))
 }
 
+exports.putBioPatient = (req, res, next)=>{
+    const _id = req.params._id
+
+    const patientName = req.body.patientName
+    const patientEmail = req.body.patientEmail
+    const phone = req.body.phone
+
+    finishedTreatment.findById(_id)
+        .then(post => {
+            if (!post) {
+                const err = new Error('data tidak ada')
+                err.errorStatus = 404
+                throw err
+            }
+
+            post.patientName = patientName
+            post.patientEmail = patientEmail
+            post.phone = phone
+
+            return post.save()
+        })
+        .then(result=>{
+            res.status(201).json({
+                message: "bio patient is updated",
+                data: result
+            })
+        })
+        .catch(err=>next(err))
+}
+
 exports.getAll = (req, res, next)=>{
     let totalItems
     

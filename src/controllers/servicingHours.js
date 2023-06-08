@@ -411,6 +411,41 @@ exports.putPresence = (req, res, next) => {
         .catch(err => console.log(err))
 }
 
+exports.putAdminInfo = (req, res, next) => {
+    const _id = req.params._id
+    const email = req.params.email
+
+    const emailAdmin = req.body.emailAdmin
+    const nameAdmin = req.body.nameAdmin
+
+    const updateDocument = {
+        $set: {
+            "userAppointmentData.$.isConfirm.emailAdmin": emailAdmin,
+            "userAppointmentData.$.isConfirm.nameAdmin": nameAdmin,
+        }
+    }
+
+    // const options = {
+    //     "userAppointmentData.$.isConfirm.emailAdmin": email
+    // }
+
+    const options = {
+        arrayFilters: [
+            { "isConfirm.emailAdmin": email },
+            // { "id.id": id }
+        ]
+    }
+
+    servicingHours.updateMany({ _id: _id }, updateDocument, options )
+        .then(result => {
+            res.status(201).json({
+                message: 'admin information is updated',
+                data: result
+            })
+        })
+        .catch(err => console.log(err))
+}
+
 exports.getAll = (req, res, next) => {
     let totalItems
 
@@ -448,7 +483,7 @@ exports.deletePatientRegistration = (req, res, next) => {
         .catch(err => console.log(err))
 }
 
-exports.cancelRegistration = (req, res, next)=>{
+exports.cancelRegistration = (req, res, next) => {
     const _id = req.params._id
     const id = req.params.id
 

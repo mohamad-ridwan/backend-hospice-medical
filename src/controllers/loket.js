@@ -68,6 +68,36 @@ exports.postLoketInfo = (req, res, next) => {
         .catch(err => console.log(err))
 }
 
+exports.putBioPatient = (req, res, next) => {
+    const _id = req.params._id
+
+    const patientName = req.body.patientName
+    const phone = req.body.phone
+    const emailAdmin = req.body.emailAdmin
+
+    loket.findById(_id)
+        .then(post => {
+            if (!post) {
+                const err = new Error('data tidak ada')
+                err.errorStatus = 404
+                throw err
+            }
+
+            post.patientName = patientName
+            post.phone = phone
+            post.emailAdmin = emailAdmin
+
+            return post.save()
+        })
+        .then(result=>{
+            res.status(201).json({
+                message: "bio patient is updated",
+                data: result
+            })
+        })
+        .catch(err=>next(err))
+}
+
 exports.putPatientQueue = (req, res, next) => {
     const _id = req.params._id
 

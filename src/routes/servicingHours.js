@@ -17,6 +17,7 @@ router.put('/put/book-an-appointment/user-appointment-data/:_id/:id/is-notif', u
 router.put('/put/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id', useControllers.putPatientRegistration)
 router.put('/put/patient-registration-data/book-an-appointment/user-appointment-data/is-confirm/:_id/:id', useControllers.putIsConfirm)
 router.put('/put/patient-registration-data/book-an-appointment/user-appointment-data/is-confirm/presence/:_id/:id', useControllers.putPresence)
+router.put('/put/patient-registration-data/book-an-appointment/user-appointment-data/is-confirm/admin-info/profile-admin/updated/:_id/:email', useControllers.putAdminInfo)
 router.get('/get', useControllers.getAll)
 router.delete('/delete/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id', useControllers.deletePatientRegistration)
 router.delete('/delete/patient-registration/book-an-appointment/:_id/user-appointment/cancel-registration/patient/:id', useControllers.cancelRegistration)
