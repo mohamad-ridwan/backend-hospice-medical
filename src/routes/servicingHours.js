@@ -21,5 +21,12 @@ router.put('/put/patient-registration-data/book-an-appointment/user-appointment-
 router.get('/get', useControllers.getAll)
 router.delete('/delete/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id', useControllers.deletePatientRegistration)
 router.delete('/delete/patient-registration/book-an-appointment/:_id/user-appointment/cancel-registration/patient/:id', useControllers.cancelRegistration)
+// post patient treatment
+router.post('/post/role/:roleId', useControllers.postPatientTreatment)
+router.post('/post/role/:roleId/data', useControllers.postPatientRegistration)
+// update patient treatment
+router.put('/put/role/:roleId/data/:id', useControllers.updatePatientRegistration)
+// delete patient treatment
+router.delete('/delete/role/:roleId/data/:id', useControllers.deleteDataPatientOfPatientTreatment)
 
 module.exports = router

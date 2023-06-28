@@ -436,7 +436,7 @@ exports.putAdminInfo = (req, res, next) => {
         ]
     }
 
-    servicingHours.updateMany({ _id: _id }, updateDocument, options )
+    servicingHours.updateMany({ _id: _id }, updateDocument, options)
         .then(result => {
             res.status(201).json({
                 message: 'admin information is updated',
@@ -505,6 +505,341 @@ exports.cancelRegistration = (req, res, next) => {
         .then(result => {
             res.status(201).json({
                 message: 'cancel registration is successfully',
+                data: result
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+// patient treatment
+exports.postPatientTreatment = (req, res, next) => {
+    const roleId = req.params.roleId
+
+    const post = new servicingHours({
+        id: roleId,
+        data: []
+    })
+
+    post.save()
+        .then(result => {
+            res.status(201).json({
+                message: `role id ${roleId} berhasil di post`,
+                data: result
+            })
+        })
+        .catch(err => console.log(err))
+}
+
+exports.postPatientRegistration = (req, res, next) => {
+    const roleId = req.params.roleId
+
+    if (roleId === 'patient-registration') {
+        const id = `${new Date().getTime()}`
+        const patientName = req.body.patientName
+        const phone = req.body.phone
+        const emailAddress = req.body.emailAddress
+        const dateOfBirth = req.body.dateOfBirth
+        const appointmentDate = req.body.appointmentDate
+        const message = req.body.patientMessage.message
+        const patientComplaints = req.body.patientMessage.patientComplaints
+        const submissionDate = req.body.submissionDate.submissionDate
+        const clock = req.body.submissionDate.clock
+
+        const data = {
+            id: id,
+            patientName: patientName,
+            phone: phone,
+            emailAddress: emailAddress,
+            dateOfBirth: dateOfBirth,
+            appointmentDate: appointmentDate,
+            patientMessage: {
+                message: message,
+                patientComplaints: patientComplaints,
+            },
+            submissionDate: {
+                submissionDate: submissionDate,
+                clock: clock,
+            }
+        }
+
+        pushToPostData(data, "pasien berhasil mendaftarkan untuk berobat")
+    } else if (roleId === 'confirmation-patients') {
+        const id = `${new Date().getTime()}`
+        const patientId = req.body.patientId
+        const adminId = req.body.adminInfo.adminId
+        const dateConfirm = req.body.dateConfirmInfo.dateConfirm
+        const confirmHour = req.body.dateConfirmInfo.confirmHour
+        const treatmentHours = req.body.dateConfirmInfo.treatmentHours
+        const doctorId = req.body.doctorInfo.doctorId
+        const roomId = req.body.roomInfo.roomId
+        const queueNumber = req.body.roomInfo.queueNumber
+        const presence = req.body.roomInfo.presence
+
+        const data = {
+            id,
+            patientId,
+            adminInfo: {
+                adminId,
+            },
+            dateConfirmInfo: {
+                dateConfirm,
+                confirmHour,
+                treatmentHours
+            },
+            doctorInfo: {
+                doctorId
+            },
+            roomInfo: {
+                roomId,
+                queueNumber,
+                presence
+            }
+        }
+
+        pushToPostData(data, `confirmation dari pasien ${patientId} berhasil di buat`)
+    } else if (roleId === 'drug-counter') {
+        const id = `${new Date().getTime()}`
+        const patientId = req.body.patientId
+        const loketId = req.body.loketInfo.loketId
+        const message = req.body.message
+        const adminId = req.body.adminInfo.adminId
+        const presence = req.body.presence
+        const submissionDate = req.body.submissionDate.submissionDate
+        const submitHours = req.body.submissionDate.submitHours
+
+        const data = {
+            id,
+            patientId,
+            loketInfo: { loketId },
+            message,
+            adminInfo: { adminId },
+            presence,
+            submissionDate: {
+                submissionDate,
+                submitHours
+            },
+            isConfirm: {confirmState: false}
+        }
+
+        pushToPostData(data, `pasien ${patientId} berhasil di tambahkan di daftar loket`)
+    } else if (roleId === 'finished-treatment') {
+        const id = `${new Date().getTime()}`
+        const patientId = req.body.patientId
+        const dateConfirm = req.body.confirmedTime.dateConfirm
+        const confirmHour = req.body.confirmedTime.confirmHour
+        const adminId = req.body.adminInfo.adminId
+
+        const data = {
+            id,
+            patientId,
+            confirmedTime: {
+                dateConfirm,
+                confirmHour
+            },
+            adminInfo: { adminId }
+        }
+
+        pushToPostData(data, `pasien dari ${patientId} telah berhasil menyelesaikan tahapan berobat`)
+    } else if (roleId === 'room') {
+        const id = `${new Date().getTime()}`
+        const room = req.body.room
+
+        const data = {
+            id,
+            room
+        }
+
+        pushToPostData(data, `room ${room} berhasil di buat`)
+    } else {
+        let err = new Error(`tidak ada id dengan ${roleId}`)
+        err.errorStatus = 404
+        throw err
+    }
+
+    function pushToPostData(data, message) {
+        servicingHours.updateOne(
+            { id: roleId },
+            { $push: { data: { $each: [data], $position: 0 } } },
+            { upsert: true }
+        )
+            .then(result => {
+                res.status(201).json({
+                    message: message,
+                    data: result
+                })
+            })
+            .catch(err => console.log(err))
+    }
+}
+
+// update patient treatment
+exports.updatePatientRegistration = (req, res, next) => {
+    const roleId = req.params.roleId
+    const id = req.params.id
+
+    if (roleId === 'patient-registration') {
+        const patientName = req.body.patientName
+        const phone = req.body.phone
+        const emailAddress = req.body.emailAddress
+        const dateOfBirth = req.body.dateOfBirth
+        const appointmentDate = req.body.appointmentDate
+        const message = req.body.patientMessage.message
+        const patientComplaints = req.body.patientMessage.patientComplaints
+        const submissionDate = req.body.submissionDate.submissionDate
+        const clock = req.body.submissionDate.clock
+
+        const data = {
+            "data.$[filter].patientName": patientName,
+            "data.$[filter].phone": phone,
+            "data.$[filter].emailAddress": emailAddress,
+            "data.$[filter].dateOfBirth": dateOfBirth,
+            "data.$[filter].appointmentDate": appointmentDate,
+            "data.$[filter].patientMessage.message": message,
+            "data.$[filter].patientMessage.patientComplaints": patientComplaints,
+            "data.$[filter].submissionDate.submissionDate": submissionDate,
+            "data.$[filter].submissionDate.clock": clock,
+        }
+
+        const updateDocument = {
+            $set: data
+        }
+
+        const options = {
+            arrayFilters: [
+                { 'filter.id': id }
+            ]
+        }
+
+        pushToUpdateData(updateDocument, options, `data pasien dari pasien ${id} telah berhasil di update`)
+    }else if(roleId === 'confirmation-patients'){
+        const patientId = req.body.patientId
+        const adminId = req.body.adminInfo.adminId
+        const dateConfirm = req.body.dateConfirmInfo.dateConfirm
+        const confirmHour = req.body.dateConfirmInfo.confirmHour
+        const treatmentHours = req.body.dateConfirmInfo.treatmentHours
+        const doctorId = req.body.doctorInfo.doctorId
+        const roomId = req.body.roomInfo.roomId
+        const queueNumber = req.body.roomInfo.queueNumber
+        const presence = req.body.roomInfo.presence
+
+        const data = {
+            "data.$[filter].patientId": patientId,
+            "data.$[filter].adminInfo.adminId": adminId,
+            "data.$[filter].dateConfirmInfo.dateConfirm": dateConfirm,
+            "data.$[filter].dateConfirmInfo.confirmHour": confirmHour,
+            "data.$[filter].dateConfirmInfo.treatmentHours": treatmentHours,
+            "data.$[filter].doctorInfo.doctorId": doctorId,
+            "data.$[filter].roomInfo.roomId": roomId,
+            "data.$[filter].roomInfo.queueNumber": queueNumber,
+            "data.$[filter].roomInfo.presence": presence,
+        }
+
+        const updateDocument = {
+            $set: data
+        }
+
+        const options = {
+            arrayFilters: [
+                { 'filter.id': id }
+            ]
+        }
+
+        pushToUpdateData(updateDocument, options, `data konfirmasi pasien dari pasien ${patientId} telah berhasil di update`)
+    }else if(roleId === 'drug-counter'){
+        const patientId = req.body.patientId
+        const loketId = req.body.loketInfo.loketId
+        const message = req.body.message
+        const adminId = req.body.adminInfo.adminId
+        const presence = req.body.presence
+        const submissionDate = req.body.submissionDate.submissionDate
+        const submitHours = req.body.submissionDate.submitHours
+        const isConfirm = req.body.isConfirm
+
+        const data = {
+            "data.$[filter].patientId": patientId,
+            "data.$[filter].loketInfo.loketId": loketId,
+            "data.$[filter].message": message,
+            "data.$[filter].adminInfo.adminId": adminId,
+            "data.$[filter].presence": presence,
+            "data.$[filter].submissionDate.submissionDate": submissionDate,
+            "data.$[filter].submissionDate.submitHours": submitHours,
+            "data.$[filter].isConfirm": isConfirm,
+        }
+
+        const updateDocument = {
+            $set: data
+        }
+
+        const options = {
+            arrayFilters: [
+                { 'filter.id': id }
+            ]
+        }
+
+        pushToUpdateData(updateDocument, options, `data pasien di loket dari pasien ${patientId} berhasil di update`)
+    }else if(roleId === 'finished-treatment'){
+        const patientId = req.body.patientId
+        const dateConfirm = req.body.confirmedTime.dateConfirm
+        const confirmHour = req.body.confirmedTime.confirmHour
+        const adminId = req.body.adminInfo.adminId
+
+        const data = {
+            "data.$[filter].patientId": patientId,
+            "data.$[filter].confirmedTime.dateConfirm": dateConfirm,
+            "data.$[filter].confirmedTime.confirmHour": confirmHour,
+            "data.$[filter].adminInfo.adminId": adminId
+        }
+
+        const updateDocument = {
+            $set: data
+        }
+
+        const options = {
+            arrayFilters: [
+                { 'filter.id': id }
+            ]
+        }
+
+        pushToUpdateData(updateDocument, options, `data pasien yang telah menyelesaikan berobat dari pasien ${patientId} berhasil di update`)
+    }else {
+        let err = new Error(`tidak ada id dengan ${roleId}`)
+        err.errorStatus = 404
+        throw err
+    }
+
+    function pushToUpdateData(
+        updateDocument,
+        options,
+        message
+    ) {
+        servicingHours.updateOne(
+            { id: roleId },
+            updateDocument,
+            options
+        )
+            .then(result => {
+                res.status(201).json({
+                    message: message,
+                    data: result
+                })
+            })
+            .catch(err => console.log(err))
+    }
+}
+
+// delete patient treatment
+exports.deleteDataPatientOfPatientTreatment = (req, res, next)=>{
+    const roleId = req.params.roleId
+    const id = req.params.id
+
+    servicingHours.updateOne(
+        { id: roleId },
+        { $pull: { data: { id: id } } },
+        { upsert: true }
+    )
+        .then(result => {
+            res.status(200).json({
+                message: `data pasien ${id} dari roleId:${roleId} telah berhasil di hapus`,
                 data: result
             })
         })
