@@ -650,7 +650,17 @@ exports.postPatientRegistration = (req, res, next) => {
         }
 
         pushToPostData(data, `room ${room} berhasil di buat`)
-    } else {
+    } else if(roleId === 'info-loket'){
+        const id = `${new Date().getTime()}`
+        const loketName = req.body.loketName
+
+        const data = {
+            id,
+            loketName
+        }
+
+        pushToPostData(data, `loket ${loketName} berhasil di buat`)
+    }else {
         let err = new Error(`tidak ada id dengan ${roleId}`)
         err.errorStatus = 404
         throw err
@@ -801,6 +811,42 @@ exports.updatePatientRegistration = (req, res, next) => {
         }
 
         pushToUpdateData(updateDocument, options, `data pasien yang telah menyelesaikan berobat dari pasien ${patientId} berhasil di update`)
+    }else if(roleId === 'room'){
+        const room = req.body.room
+
+        const data = {
+            "data.$[filter].room": room
+        }
+
+        const updateDocument = {
+            $set: data
+        }
+
+        const options = {
+            arrayFilters: [
+                { 'filter.id': id }
+            ]
+        }
+
+        pushToUpdateData(updateDocument, options, `room ${id} berhasil di update`)
+    }else if(roleId === 'info-loket'){
+        const loketName = req.body.loketName
+
+        const data = {
+            "data.$[filter].loketName": loketName
+        }
+
+        const updateDocument = {
+            $set: data
+        }
+
+        const options = {
+            arrayFilters: [
+                { 'filter.id': id }
+            ]
+        }
+
+        pushToUpdateData(updateDocument, options, `loket ${id} berhasil di update`)
     }else {
         let err = new Error(`tidak ada id dengan ${roleId}`)
         err.errorStatus = 404
