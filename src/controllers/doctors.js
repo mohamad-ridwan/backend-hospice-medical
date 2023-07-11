@@ -39,6 +39,8 @@ exports.postData = (req, res, next)=>{
     const image = req.body.image
     const name = req.body.name
     const deskripsi = req.body.deskripsi
+    const email = req.body.email
+    const phone = req.body.phone
     const room = req.body.room
     const medsos = req.body.medsos
     const doctorSchedule = req.body.doctorSchedule
@@ -49,6 +51,8 @@ exports.postData = (req, res, next)=>{
         image,
         name,
         deskripsi,
+        email,
+        phone,
         room,
         medsos,
         doctorSchedule,
