@@ -21,9 +21,6 @@ const doctors = new Schema({
     name: {
         type: String
     },
-    medsos: {
-        type: Array
-    },
     nameIcon: {
         type: String
     },

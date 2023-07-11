@@ -21,23 +21,42 @@ exports.post = (req, res, next)=>{
 }
 
 exports.postData = (req, res, next)=>{
-    const _id = req.params._id
+    const id = req.params.id
 
-    const id = `${new Date().getTime()}`
-    const image = req.file.path
+    // room
+    // room : 123
+
+    // object medsos
+    // {id: 123, nameIcon: fab fa-twitter, elementIcon: <svg/>, path: twitter.com, medsosName: twitter}[]
+
+    // object doctorSchedule
+    // {id: 123, dayName: Senin, practiceHours: 08:00 - 12:00}[]
+
+    // holiday schedule
+    // {id: 123, date: new Date}
+
+    const timeId = `${new Date().getTime()}`
+    const image = req.body.image
     const name = req.body.name
     const deskripsi = req.body.deskripsi
+    const room = req.body.room
+    const medsos = req.body.medsos
+    const doctorSchedule = req.body.doctorSchedule
+    const holidaySchedule = req.body.holidaySchedule
 
     const data = {
-        id: id,
-        image: image,
-        name: name,
-        deskripsi: deskripsi,
-        medsos: []
+        id: timeId,
+        image,
+        name,
+        deskripsi,
+        room,
+        medsos,
+        doctorSchedule,
+        holidaySchedule
     }
 
     doctors.updateOne(
-        {_id: _id},
+        {id: id},
         {$push: {data: data}},
         {upsert: true}
     )
@@ -219,4 +238,23 @@ exports.get = (req, res, next)=>{
         })
     })
     .catch(err=>next(err))
+}
+
+// delete profile doctor
+exports.deleteProfileDoctor = (req, res, next)=>{
+    const roleId = req.params.roleId
+    const id = req.params.id
+
+    doctors.updateOne(
+        {id: roleId},
+        {$pull: {data: {id: id}}},
+        {upsert: true}
+    )
+    .then(result=>{
+        res.status(200).json({
+            message: `data dokter ${id} dari role ${roleId} telah berhasil di hapus`,
+            data: result
+        })
+    })
+    .catch(err => console.log(err))
 }
