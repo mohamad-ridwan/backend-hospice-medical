@@ -27,6 +27,6 @@ router.post('/post/role/:roleId/data', useControllers.postPatientRegistration)
 // update patient treatment
 router.put('/put/role/:roleId/data/:id', useControllers.updatePatientRegistration)
 // delete patient treatment
-router.delete('/delete/role/:roleId/data/:id', useControllers.deleteDataPatientOfPatientTreatment)
+router.delete('/delete/role/:roleId/data/:id/:patientId', useControllers.deleteDataPatientOfPatientTreatment)
 
 module.exports = router

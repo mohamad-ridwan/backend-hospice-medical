@@ -866,7 +866,8 @@ exports.updatePatientRegistration = (req, res, next) => {
             .then(result => {
                 res.status(201).json({
                     message: message,
-                    data: result
+                    data: result,
+                    id: id
                 })
             })
             .catch(err => console.log(err))
@@ -877,6 +878,7 @@ exports.updatePatientRegistration = (req, res, next) => {
 exports.deleteDataPatientOfPatientTreatment = (req, res, next)=>{
     const roleId = req.params.roleId
     const id = req.params.id
+    const patientId = req.params.patientId
 
     servicingHours.updateOne(
         { id: roleId },
@@ -886,7 +888,9 @@ exports.deleteDataPatientOfPatientTreatment = (req, res, next)=>{
         .then(result => {
             res.status(200).json({
                 message: `data pasien ${id} dari roleId:${roleId} telah berhasil di hapus`,
-                data: result
+                data: result,
+                id,
+                patientId
             })
         })
         .catch(err => console.log(err))
