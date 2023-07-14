@@ -628,6 +628,7 @@ exports.postPatientRegistration = (req, res, next) => {
         const dateConfirm = req.body.confirmedTime.dateConfirm
         const confirmHour = req.body.confirmedTime.confirmHour
         const adminId = req.body.adminInfo.adminId
+        const isCanceled = req.body.isCanceled
 
         const data = {
             id,
@@ -636,10 +637,11 @@ exports.postPatientRegistration = (req, res, next) => {
                 dateConfirm,
                 confirmHour
             },
-            adminInfo: { adminId }
+            adminInfo: { adminId },
+            isCanceled
         }
 
-        pushToPostData(data, `pasien dari ${patientId} telah berhasil menyelesaikan tahapan berobat`)
+        pushToPostData(data, `pasien dari ${patientId} telah berhasil menyelesaikan tahapan berobat`, patientId)
     } else if (roleId === 'room') {
         const id = `${new Date().getTime()}`
         const room = req.body.room
@@ -666,7 +668,7 @@ exports.postPatientRegistration = (req, res, next) => {
         throw err
     }
 
-    function pushToPostData(data, message) {
+    function pushToPostData(data, message, patientId) {
         servicingHours.updateOne(
             { id: roleId },
             { $push: { data: { $each: [data], $position: 0 } } },
@@ -675,7 +677,8 @@ exports.postPatientRegistration = (req, res, next) => {
             .then(result => {
                 res.status(201).json({
                     message: message,
-                    data: result
+                    data: result,
+                    patientId: patientId
                 })
             })
             .catch(err => console.log(err))
@@ -792,12 +795,14 @@ exports.updatePatientRegistration = (req, res, next) => {
         const dateConfirm = req.body.confirmedTime.dateConfirm
         const confirmHour = req.body.confirmedTime.confirmHour
         const adminId = req.body.adminInfo.adminId
+        const isCanceled = req.body.isCanceled
 
         const data = {
             "data.$[filter].patientId": patientId,
             "data.$[filter].confirmedTime.dateConfirm": dateConfirm,
             "data.$[filter].confirmedTime.confirmHour": confirmHour,
-            "data.$[filter].adminInfo.adminId": adminId
+            "data.$[filter].adminInfo.adminId": adminId,
+            "data.$[filter].isCanceled": isCanceled
         }
 
         const updateDocument = {
