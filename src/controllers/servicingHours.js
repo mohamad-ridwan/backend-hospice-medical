@@ -629,6 +629,7 @@ exports.postPatientRegistration = (req, res, next) => {
         const confirmHour = req.body.confirmedTime.confirmHour
         const adminId = req.body.adminInfo.adminId
         const isCanceled = req.body.isCanceled
+        const messageCancelled = req.body.messageCancelled
 
         const data = {
             id,
@@ -638,7 +639,8 @@ exports.postPatientRegistration = (req, res, next) => {
                 confirmHour
             },
             adminInfo: { adminId },
-            isCanceled
+            isCanceled,
+            messageCancelled
         }
 
         pushToPostData(data, `pasien dari ${patientId} telah berhasil menyelesaikan tahapan berobat`, patientId)
