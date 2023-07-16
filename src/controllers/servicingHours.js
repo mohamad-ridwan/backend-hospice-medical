@@ -573,7 +573,7 @@ exports.postPatientRegistration = (req, res, next) => {
         const doctorId = req.body.doctorInfo.doctorId
         const roomId = req.body.roomInfo.roomId
         const queueNumber = req.body.roomInfo.queueNumber
-        const presence = req.body.roomInfo.presence
+        // const presence = req.body.roomInfo.presence
 
         const data = {
             id,
@@ -592,7 +592,7 @@ exports.postPatientRegistration = (req, res, next) => {
             roomInfo: {
                 roomId,
                 queueNumber,
-                presence
+                // presence
             }
         }
 
@@ -603,9 +603,10 @@ exports.postPatientRegistration = (req, res, next) => {
         const loketId = req.body.loketInfo.loketId
         const message = req.body.message
         const adminId = req.body.adminInfo.adminId
-        const presence = req.body.presence
+        // const presence = req.body.presence
         const submissionDate = req.body.submissionDate.submissionDate
         const submitHours = req.body.submissionDate.submitHours
+        const queueNumber = req.body.queueNumber
 
         const data = {
             id,
@@ -613,12 +614,13 @@ exports.postPatientRegistration = (req, res, next) => {
             loketInfo: { loketId },
             message,
             adminInfo: { adminId },
-            presence,
+            // presence,
             submissionDate: {
                 submissionDate,
                 submitHours
             },
-            isConfirm: {confirmState: false}
+            queueNumber,
+            isConfirm: {confirmState: false},
         }
 
         pushToPostData(data, `pasien ${patientId} berhasil di tambahkan di daftar loket`)
@@ -735,7 +737,7 @@ exports.updatePatientRegistration = (req, res, next) => {
         const doctorId = req.body.doctorInfo.doctorId
         const roomId = req.body.roomInfo.roomId
         const queueNumber = req.body.roomInfo.queueNumber
-        const presence = req.body.roomInfo.presence
+        // const presence = req.body.roomInfo.presence
 
         const data = {
             "data.$[filter].patientId": patientId,
@@ -746,7 +748,7 @@ exports.updatePatientRegistration = (req, res, next) => {
             "data.$[filter].doctorInfo.doctorId": doctorId,
             "data.$[filter].roomInfo.roomId": roomId,
             "data.$[filter].roomInfo.queueNumber": queueNumber,
-            "data.$[filter].roomInfo.presence": presence,
+            // "data.$[filter].roomInfo.presence": presence,
         }
 
         const updateDocument = {
@@ -765,9 +767,10 @@ exports.updatePatientRegistration = (req, res, next) => {
         const loketId = req.body.loketInfo.loketId
         const message = req.body.message
         const adminId = req.body.adminInfo.adminId
-        const presence = req.body.presence
+        // const presence = req.body.presence
         const submissionDate = req.body.submissionDate.submissionDate
         const submitHours = req.body.submissionDate.submitHours
+        const queueNumber = req.body.queueNumber
         const isConfirm = req.body.isConfirm
 
         const data = {
@@ -775,9 +778,10 @@ exports.updatePatientRegistration = (req, res, next) => {
             "data.$[filter].loketInfo.loketId": loketId,
             "data.$[filter].message": message,
             "data.$[filter].adminInfo.adminId": adminId,
-            "data.$[filter].presence": presence,
+            // "data.$[filter].presence": presence,
             "data.$[filter].submissionDate.submissionDate": submissionDate,
             "data.$[filter].submissionDate.submitHours": submitHours,
+            "data.$[filter].queueNumber": queueNumber,
             "data.$[filter].isConfirm": isConfirm,
         }
 
