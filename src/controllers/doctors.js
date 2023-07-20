@@ -331,7 +331,8 @@ exports.deleteProfileDoctor = (req, res, next) => {
         .then(result => {
             res.status(200).json({
                 message: `data dokter ${id} dari role ${roleId} telah berhasil di hapus`,
-                data: result
+                data: result,
+                doctorId: id
             })
         })
         .catch(err => console.log(err))
