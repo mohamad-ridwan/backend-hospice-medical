@@ -795,7 +795,7 @@ exports.updatePatientRegistration = (req, res, next) => {
             ]
         }
 
-        pushToUpdateData(updateDocument, options, `data pasien di loket dari pasien ${patientId} berhasil di update`)
+        pushToUpdateData(updateDocument, options, `data pasien di loket dari pasien ${patientId} berhasil di update`, patientId)
     }else if(roleId === 'finished-treatment'){
         const patientId = req.body.patientId
         const dateConfirm = req.body.confirmedTime.dateConfirm
@@ -867,7 +867,8 @@ exports.updatePatientRegistration = (req, res, next) => {
     function pushToUpdateData(
         updateDocument,
         options,
-        message
+        message,
+        patientId
     ) {
         servicingHours.updateOne(
             { id: roleId },
@@ -878,7 +879,8 @@ exports.updatePatientRegistration = (req, res, next) => {
                 res.status(201).json({
                     message: message,
                     data: result,
-                    id: id
+                    id: id,
+                    patientId
                 })
             })
             .catch(err => console.log(err))
