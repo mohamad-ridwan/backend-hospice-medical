@@ -802,13 +802,15 @@ exports.updatePatientRegistration = (req, res, next) => {
         const confirmHour = req.body.confirmedTime.confirmHour
         const adminId = req.body.adminInfo.adminId
         const isCanceled = req.body.isCanceled
+        const messageCancelled = req.body.messageCancelled
 
         const data = {
             "data.$[filter].patientId": patientId,
             "data.$[filter].confirmedTime.dateConfirm": dateConfirm,
             "data.$[filter].confirmedTime.confirmHour": confirmHour,
             "data.$[filter].adminInfo.adminId": adminId,
-            "data.$[filter].isCanceled": isCanceled
+            "data.$[filter].isCanceled": isCanceled,
+            "data.$[filter].messageCancelled": messageCancelled
         }
 
         const updateDocument = {
