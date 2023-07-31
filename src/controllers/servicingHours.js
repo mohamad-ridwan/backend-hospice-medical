@@ -649,10 +649,12 @@ exports.postPatientRegistration = (req, res, next) => {
     } else if (roleId === 'room') {
         const id = `${new Date().getTime()}`
         const room = req.body.room
+        const roomType = req.body.roomType
 
         const data = {
             id,
-            room
+            room,
+            roomType
         }
 
         pushToPostData(data, `room ${room} berhasil di buat`)
