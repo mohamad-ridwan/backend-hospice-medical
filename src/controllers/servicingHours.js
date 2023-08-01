@@ -828,9 +828,11 @@ exports.updatePatientRegistration = (req, res, next) => {
         pushToUpdateData(updateDocument, options, `data pasien yang telah menyelesaikan berobat dari pasien ${patientId} berhasil di update`)
     }else if(roleId === 'room'){
         const room = req.body.room
+        const roomType = req.body.roomType
 
         const data = {
-            "data.$[filter].room": room
+            "data.$[filter].room": room,
+            "data.$[filter].roomType": roomType
         }
 
         const updateDocument = {
