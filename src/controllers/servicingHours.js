@@ -650,11 +650,19 @@ exports.postPatientRegistration = (req, res, next) => {
         const id = `${new Date().getTime()}`
         const room = req.body.room
         const roomType = req.body.roomType
+        const procurementDate = req.body.dates.procurementDate
+        const procurementHours = req.body.dates.procurementHours
+        const roomActive = req.body.roomActive
 
         const data = {
             id,
             room,
-            roomType
+            roomType,
+            dates:{
+                procurementDate,
+                procurementHours
+            },
+            roomActive
         }
 
         pushToPostData(data, `room ${room} berhasil di buat`)
@@ -829,10 +837,16 @@ exports.updatePatientRegistration = (req, res, next) => {
     }else if(roleId === 'room'){
         const room = req.body.room
         const roomType = req.body.roomType
+        const procurementDate = req.body.dates.procurementDate
+        const procurementHours = req.body.dates.procurementHours
+        const roomActive = req.body.roomActive
 
         const data = {
             "data.$[filter].room": room,
-            "data.$[filter].roomType": roomType
+            "data.$[filter].roomType": roomType,
+            "data.$[filter].dates.procurementDate": procurementDate,
+            "data.$[filter].dates.procurementHours": procurementHours,
+            "data.$[filter].roomActive": roomActive
         }
 
         const updateDocument = {
