@@ -669,10 +669,20 @@ exports.postPatientRegistration = (req, res, next) => {
     } else if(roleId === 'info-loket'){
         const id = `${new Date().getTime()}`
         const loketName = req.body.loketName
+        const counterType = req.body.counterType
+        const procurementDate = req.body.dates.procurementDate
+        const procurementHours = req.body.dates.procurementHours
+        const roomActive = req.body.roomActive
 
         const data = {
             id,
-            loketName
+            loketName,
+            counterType,
+            dates: {
+                procurementDate,
+                procurementHours,
+            },
+            roomActive
         }
 
         pushToPostData(data, `loket ${loketName} berhasil di buat`)
@@ -862,9 +872,17 @@ exports.updatePatientRegistration = (req, res, next) => {
         pushToUpdateData(updateDocument, options, `room ${id} berhasil di update`)
     }else if(roleId === 'info-loket'){
         const loketName = req.body.loketName
+        const counterType = req.body.counterType
+        const procurementDate = req.body.dates.procurementDate
+        const procurementHours = req.body.dates.procurementHours
+        const roomActive = req.body.roomActive
 
         const data = {
-            "data.$[filter].loketName": loketName
+            "data.$[filter].loketName": loketName,
+            "data.$[filter].counterType": counterType,
+            "data.$[filter].dates.procurementDate": procurementDate,
+            "data.$[filter].dates.procurementHours": procurementHours,
+            "data.$[filter].roomActive": roomActive,
         }
 
         const updateDocument = {

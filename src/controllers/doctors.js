@@ -42,6 +42,7 @@ exports.postData = (req, res, next) => {
     const email = req.body.email
     const phone = req.body.phone
     const room = req.body.room
+    const doctorActive = req.body.doctorActive
     const medsos = req.body.medsos
     const doctorSchedule = req.body.doctorSchedule
     const holidaySchedule = req.body.holidaySchedule
@@ -54,6 +55,7 @@ exports.postData = (req, res, next) => {
         email,
         phone,
         room,
+        doctorActive,
         medsos,
         doctorSchedule,
         holidaySchedule
@@ -85,6 +87,7 @@ exports.putProfileDoctor = (req, res, next) => {
         const email = req.body.email
         const phone = req.body.phone
         const room = req.body.room
+        const doctorActive = req.body.doctorActive
         const medsos = req.body.medsos
         const doctorSchedule = req.body.doctorSchedule
         const holidaySchedule = req.body.holidaySchedule
@@ -100,6 +103,7 @@ exports.putProfileDoctor = (req, res, next) => {
             [keys('email')]: email,
             [keys('phone')]: phone,
             [keys('room')]: room,
+            [keys('doctorActive')]: doctorActive,
             [keys('medsos')]: medsos,
             [keys('doctorSchedule')]: doctorSchedule,
             [keys('holidaySchedule')]: holidaySchedule,
