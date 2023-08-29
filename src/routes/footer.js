@@ -1,14 +1,19 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const {
+  getAll,
+  postContactUs,
+  postNewsletter,
+  postUsersEmail,
+  putContactUs,
+  putNewsletter,
+} = require("../controllers/footer");
 
-const useControllers = require('../controllers/footer')
+router.post("/post/contact-us", postContactUs);
+router.post("/post/newsletter", postNewsletter);
+router.post("/post/newsletter/users/:_id", postUsersEmail);
+router.put("/put/contact-us/:_id", putContactUs);
+router.put("/put/newsletter/:_id", putNewsletter);
+router.get("/get", getAll);
 
-router.post('/post/contact-us', useControllers.postContactUs)
-router.post('/post/newsletter', useControllers.postNewsletter)
-router.post('/post/newsletter/users/:_id', useControllers.postUsersEmail)
-router.put('/put/contact-us/:_id', useControllers.putContactUs)
-router.put('/put/newsletter/:_id', useControllers.putNewsletter)
-router.get('/get', useControllers.getAll)
-
-module.exports = router
+module.exports = router;

@@ -1,12 +1,15 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const {
+  deleteItems,
+  getAll,
+  postPatientFinishTreatment,
+  putBioPatient,
+} = require("../controllers/finishedTreatment");
 
-const useControllers = require('../controllers/finishedTreatment')
+router.post("/post/patient-registration", postPatientFinishTreatment);
+router.put("/put/rules-treatment/patient-registration/:_id", putBioPatient);
+router.get("/get", getAll);
+router.delete("/delete/items/:_id", deleteItems);
 
-router.post('/post/patient-registration', useControllers.postPatientFinishTreatment)
-router.put('/put/rules-treatment/patient-registration/:_id', useControllers.putBioPatient)
-router.get('/get', useControllers.getAll)
-router.delete('/delete/items/:_id', useControllers.deleteItems)
-
-module.exports = router
+module.exports = router;

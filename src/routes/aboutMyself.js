@@ -1,13 +1,17 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const {
+  getAll,
+  post,
+  postDataBio,
+  put,
+  putDataBio,
+} = require("../controllers/aboutMyself");
 
-const useControllers = require('../controllers/aboutMyself')
+router.post("/post", post);
+router.post("/post/data-bio/:_id", postDataBio);
+router.put("/put/:_id", put);
+router.put("/put/data-bio/:_id/:id", putDataBio);
+router.get("/get", getAll);
 
-router.post('/post', useControllers.post)
-router.post('/post/data-bio/:_id', useControllers.postDataBio)
-router.put('/put/:_id', useControllers.put)
-router.put('/put/data-bio/:_id/:id', useControllers.putDataBio)
-router.get('/get', useControllers.getAll)
-
-module.exports = router
+module.exports = router;

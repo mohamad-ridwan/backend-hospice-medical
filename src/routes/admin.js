@@ -1,12 +1,15 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const {
+  get,
+  post,
+  putAdmin,
+  putIsVerification,
+} = require("../controllers/admin");
 
-const adminControllers = require('../controllers/admin')
+router.post("/post", post);
+router.put("/put/:adminId", putIsVerification);
+router.put("/put/admin/:id", putAdmin);
+router.get("/get", get);
 
-router.post('/post', adminControllers.post)
-router.put('/put/:adminId', adminControllers.putIsVerification)
-router.put('/put/admin/:id', adminControllers.putAdmin)
-router.get('/get', adminControllers.get)
-
-module.exports = router
+module.exports = router;

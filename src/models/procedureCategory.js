@@ -1,22 +1,26 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const procedureCategory = new Schema({
-    id:{
-        type: String
+const procedureCategory = new Schema(
+  {
+    id: {
+      type: String,
+      unique: true,
     },
     title: {
-        type: String
+      type: String,
     },
     deskripsi: {
-        type: String
+      type: String,
     },
     dataImg: {
-        type: Array
-    }
-},{
-    timestamps: true
-})
+      type: Array,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('procedure-category', procedureCategory)
+module.exports = mongoose.model("procedure-category", procedureCategory);

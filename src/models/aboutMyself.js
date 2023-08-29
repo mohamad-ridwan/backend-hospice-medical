@@ -1,28 +1,32 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const aboutMyself = new Schema({
+const aboutMyself = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     title: {
-        type: String
+      type: String,
     },
     deskripsi: {
-        type: String
+      type: String,
     },
     image: {
-        type: String
+      type: String,
     },
     dataBio: {
-        type: Array
+      type: Array,
     },
     nameIcon: {
-        type: String
+      type: String,
     },
-}, {
-    timestamps: true
-})
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('about-myself', aboutMyself)
+module.exports = mongoose.model("about-myself", aboutMyself);

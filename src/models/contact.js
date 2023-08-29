@@ -1,46 +1,50 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const contact = new Schema({
+const contact = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     lat: {
-        type: String
+      type: String,
     },
     lng: {
-        type: String
+      type: String,
     },
     apiKey: {
-        type: String
+      type: String,
     },
     data: {
-        type: Array
+      type: Array,
     },
     title: {
-        type: String
+      type: String,
     },
     deskripsi: {
-        type: String
+      type: String,
     },
     nameIcon: {
-        type: String
+      type: String,
     },
     name: {
-        type: String
+      type: String,
     },
     email: {
-        type: String
+      type: String,
     },
     subject: {
-        type: String
+      type: String,
     },
     message: {
-        type: String
-    }
-}, {
-    timestamps: true
-})
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('contact', contact)
+module.exports = mongoose.model("contact", contact);

@@ -1,22 +1,26 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const headerPage = new Schema({
+const headerPage = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     title: {
-        type: String
+      type: String,
     },
     deskripsi: {
-        type: String
+      type: String,
     },
     image: {
-        type: String
-    }
-},{
-    timestamps: true
-})
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('header-page', headerPage)
+module.exports = mongoose.model("header-page", headerPage);

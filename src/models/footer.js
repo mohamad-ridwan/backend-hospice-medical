@@ -1,31 +1,35 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const footer = new Schema({
+const footer = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     alamat: {
-        type: String
+      type: String,
     },
     noTelpSatu: {
-        type: String
+      type: String,
     },
     noTelpDua: {
-        type: String
+      type: String,
     },
     copyRight: {
-        type: String
+      type: String,
     },
     data: {
-        type: Array
+      type: Array,
     },
     title: {
-        type: String
-    }
-},{
-    timestamps: true
-})
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('footer', footer)
+module.exports = mongoose.model("footer", footer);

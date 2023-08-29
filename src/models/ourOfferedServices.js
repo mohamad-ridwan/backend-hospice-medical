@@ -1,25 +1,29 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const ourOfferedServices = new Schema({
+const ourOfferedServices = new Schema(
+  {
     title: {
-        type: String
+      type: String,
     },
     deskripsi: {
-        type: String
+      type: String,
     },
     data: {
-        type: Array
+      type: Array,
     },
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     nameIcon: {
-        type: String
+      type: String,
     },
-},{
-    timestamps: true
-})
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('our-offered-services', ourOfferedServices)
+module.exports = mongoose.model("our-offered-services", ourOfferedServices);

@@ -1,135 +1,147 @@
-const ourOfferedServices = require('../models/ourOfferedServices')
+const ourOfferedServices = require("../models/ourOfferedServices");
 
-exports.post = (req, res, next)=>{
-    const title = req.body.title
-    const deskripsi = req.body.deskripsi
+exports.post = (req, res, next) => {
+  const title = req.body.title;
+  const deskripsi = req.body.deskripsi;
 
-    const post = new ourOfferedServices({
-        title: title,
-        deskripsi: deskripsi,
-        data: []
+  const post = new ourOfferedServices({
+    title: title,
+    deskripsi: deskripsi,
+    data: [],
+  });
+
+  post
+    .save()
+    .then((result) => {
+      res.status(201).json({
+        message: "our offered services berhasil di post",
+        data: result,
+      });
     })
+    .catch((err) => console.log(err));
+};
 
-    post.save()
-    .then(result=>{
-        res.status(201).json({
-            message: "our offered services berhasil di post",
-            data: result
-        })
+exports.postData = (req, res, next) => {
+  const _id = req.params._id;
+
+  const id = `${new Date().getTime()}`;
+  const nameIcon = req.body.nameIcon;
+  const title = req.body.title;
+  const deskripsi = req.body.deskripsi;
+
+  const data = {
+    id: id,
+    nameIcon: nameIcon,
+    title: title,
+    deskripsi: deskripsi,
+  };
+
+  ourOfferedServices
+    .updateOne({ _id: _id }, { $push: { data: data } }, { upsert: true })
+    .then((result) => {
+      res.status(201).json({
+        message: "data card our offered services berhasil di post",
+        data: result,
+      });
     })
-    .catch(err=>console.log(err))
-}
+    .catch((err) => console.log(err));
+};
 
-exports.postData = (req, res, next)=>{
-    const _id = req.params._id
+exports.put = (req, res, next) => {
+  const _id = req.params._id;
 
-    const id = `${new Date().getTime()}`
-    const nameIcon = req.body.nameIcon
-    const title = req.body.title
-    const deskripsi = req.body.deskripsi
+  const title = req.body.title;
+  const deskripsi = req.body.deskripsi;
 
-    const data = {
-        id: id,
-        nameIcon: nameIcon,
-        title: title,
-        deskripsi: deskripsi
-    }
+  ourOfferedServices
+    .findById(_id)
+    .then((post) => {
+      if (!post) {
+        const err = new Error("data tidak ada");
+        err.errorStatus = 404;
+        throw err;
+      }
 
-    ourOfferedServices.updateOne(
-        {_id: _id},
-        {$push: {data: data}},
-        {upsert: true}
-    )
-    .then(result=>{
-        res.status(201).json({
-            message: "data card our offered services berhasil di post",
-            data: result
-        })
+      post.title = title;
+      post.deskripsi = deskripsi;
+
+      return post.save();
     })
-    .catch(err=>console.log(err))
-}
-
-exports.put = (req, res, next)=>{
-    const _id = req.params._id
-
-    const title = req.body.title
-    const deskripsi = req.body.deskripsi
-
-    ourOfferedServices.findById(_id)
-    .then(post=>{
-        if(!post){
-            const err = new Error('data tidak ada')
-            err.errorStatus = 404
-            throw err
-        }
-
-        post.title = title
-        post.deskripsi = deskripsi
-
-        return post.save()
+    .then((result) => {
+      res.status(201).json({
+        message: "our offered services berhasil di update",
+        data: result,
+      });
     })
-    .then(result=>{
-        res.status(201).json({
-            message: "our offered services berhasil di update",
-            data: result
-        })
+    .catch((err) => console.log(err));
+};
+
+exports.putData = (req, res, next) => {
+  const _id = req.params._id;
+  const id = req.params.id;
+
+  const nameIcon = req.body.nameIcon;
+  const title = req.body.title;
+  const deskripsi = req.body.deskripsi;
+
+  const updateDocumentNameIcon = {
+    $set: { "data.$.nameIcon": nameIcon },
+  };
+
+  const updateDocumentTitle = {
+    $set: { "data.$.title": title },
+  };
+
+  const updateDocumentDeskripsi = {
+    $set: { "data.$.deskripsi": deskripsi },
+  };
+
+  ourOfferedServices
+    .updateOne({ _id: _id, "data.id": id }, updateDocumentNameIcon)
+    .then((result) => {
+      ourOfferedServices
+        .updateOne({ _id: _id, "data.id": id }, updateDocumentTitle)
+        .then((result) => {
+          ourOfferedServices
+            .updateOne({ _id: _id, "data.id": id }, updateDocumentDeskripsi)
+            .then((result) => {
+              res.status(201).json({
+                message: "data our offered service berhasil di update",
+                data: result,
+              });
+            });
+          return result;
+        });
+      return result;
     })
-    .catch(err=>console.log(err))
-}
+    .catch((err) => console.log(err));
+};
 
-exports.putData = (req, res, next)=>{
-    const _id = req.params._id
-    const id = req.params.id
+exports.getAll = (req, res, next) => {
+  let totalItems;
+  const { limit = 10, page = 1 } = req.query;
 
-    const nameIcon = req.body.nameIcon
-    const title = req.body.title
-    const deskripsi = req.body.deskripsi
-
-    const updateDocumentNameIcon = {
-        $set: {"data.$.nameIcon": nameIcon}
-    }
-
-    const updateDocumentTitle = {
-        $set: {"data.$.title": title}
-    }
-
-    const updateDocumentDeskripsi = {
-        $set: {"data.$.deskripsi": deskripsi}
-    }
-
-    ourOfferedServices.updateOne({_id: _id, "data.id": id}, updateDocumentNameIcon)
-    .then(result=>{
-        ourOfferedServices.updateOne({_id: _id, "data.id": id}, updateDocumentTitle)
-        .then(result=>{
-            ourOfferedServices.updateOne({_id: _id, "data.id": id}, updateDocumentDeskripsi)
-            .then(result=>{
-                res.status(201).json({
-                    message: "data our offered service berhasil di update",
-                    data: result
-                })
-            })
-            return result
-        })
-        return result
-    })
-    .catch(err=>console.log(err))
-}
-
-exports.getAll = (req, res, next)=>{
-    let totalItems
-    
-    ourOfferedServices.find()
+  ourOfferedServices
+    .find()
     .countDocuments()
-    .then(count=>{
-        totalItems = count
-        return ourOfferedServices.find()
+    .then((count) => {
+      totalItems = count;
+      return ourOfferedServices
+        .find()
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec();
     })
-    .then(result=>{
-        res.status(200).json({
-            message: "semua data di dapatkan",
-            data: result,
-            totalData: totalItems
-        })
+    .then((result) => {
+      res.status(200).json({
+        message: "semua data di dapatkan",
+        data: result,
+        pagination: {
+          totalData: totalItems,
+          currentPage: +page,
+          limit: +limit,
+        },
+      });
     })
-    .catch(err=>next(err))
-}
+    .catch((err) => next(err));
+};

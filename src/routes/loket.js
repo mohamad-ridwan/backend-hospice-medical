@@ -1,15 +1,21 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const {
+  deleteLokets,
+  getAll,
+  post,
+  postLoketInfo,
+  putBioPatient,
+  putPatientQueue,
+  putPresence,
+} = require("../controllers/loket");
 
-const useControllers = require('../controllers/loket')
+router.post("/post", post);
+router.post("/post/loket-info", postLoketInfo);
+router.put("/put/loket-rules/patient-queue/bio-patient/:_id", putBioPatient);
+router.put("/put/loket-rules/patient-queue/:_id", putPatientQueue);
+router.put("/put/loket-rules/patient-queue/presence/:_id", putPresence);
+router.get("/get", getAll);
+router.delete("/delete/lokets/:_id", deleteLokets);
 
-router.post('/post', useControllers.post)
-router.post('/post/loket-info', useControllers.postLoketInfo)
-router.put('/put/loket-rules/patient-queue/bio-patient/:_id', useControllers.putBioPatient)
-router.put('/put/loket-rules/patient-queue/:_id', useControllers.putPatientQueue)
-router.put('/put/loket-rules/patient-queue/presence/:_id', useControllers.putPresence)
-router.get('/get', useControllers.getAll)
-router.delete('/delete/lokets/:_id', useControllers.deleteLokets)
-
-module.exports = router
+module.exports = router;
