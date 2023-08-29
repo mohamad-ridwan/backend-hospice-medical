@@ -1,61 +1,65 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const loket = new Schema({
+const loket = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     loketRules: {
-        type: String
+      type: String,
     },
     loketName: {
-        type: String
+      type: String,
     },
     patientId: {
-        type: String
+      type: String,
     },
     jenisPenyakit: {
-        type: String
+      type: String,
     },
-    submissionDate:{
-        type: String
+    submissionDate: {
+      type: String,
     },
-    submitHours:{
-        type: String
+    submitHours: {
+      type: String,
     },
     patientName: {
-        type: String
+      type: String,
     },
     emailAddress: {
-        type: String
+      type: String,
     },
     phone: {
-        type: String
+      type: String,
     },
-    queueNumber:{
-        type: String
+    queueNumber: {
+      type: String,
     },
     message: {
-        type: String
+      type: String,
     },
     emailAdmin: {
-        type: String
+      type: String,
     },
     isNotif: {
-        type: Boolean
+      type: Boolean,
     },
-    presence:{
-        type: String
+    presence: {
+      type: String,
     },
     loketInfo: {
-        type: Array
+      type: Array,
     },
     isConfirm: {
-        type: Object
-    }
-}, {
-    timestamps: true
-})
+      type: Object,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('loket', loket)
+module.exports = mongoose.model("loket", loket);

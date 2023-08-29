@@ -1,15 +1,23 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const {
+  deleteToken,
+  get,
+  getTokenJwt,
+  jwtCreateNewPassword,
+  post,
+  put,
+} = require("../controllers/verification");
 
-const verificationControllers = require('../controllers/verification')
-
-router.post('/post', verificationControllers.post)
-router.get('/get', verificationControllers.get)
-router.put('/put/:userId', verificationControllers.put)
+router.post("/post", post);
+router.get("/get", get);
+router.put("/put/:userId", put);
 // verif create-new-password
-router.post('/post/forgot-password/create-new-password/:userId/:role', verificationControllers.jwtCreateNewPassword)
-router.get('/get/forgot-password/create-new-password', verificationControllers.getTokenJwt)
-router.delete('/delete/:userId', verificationControllers.delete)
+router.post(
+  "/post/forgot-password/create-new-password/:userId/:role",
+  jwtCreateNewPassword
+);
+router.get("/get/forgot-password/create-new-password", getTokenJwt);
+router.delete("/delete/:userId", deleteToken);
 
-module.exports = router
+module.exports = router;

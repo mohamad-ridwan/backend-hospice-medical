@@ -1,73 +1,77 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const servicingHours = new Schema({
+const servicingHours = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     title: {
-        type: String
+      type: String,
     },
     deskripsi: {
-        type: String
+      type: String,
     },
     data: {
-        type: Array
+      type: Array,
     },
     day: {
-        type: String
+      type: String,
     },
     time: {
-        type: String
+      type: String,
     },
     diseaseType: {
-        type: Array
+      type: Array,
     },
-    jenis:{
-        type: String
+    jenis: {
+      type: String,
     },
-    userAppointmentData:{
-        type: Array
+    userAppointmentData: {
+      type: Array,
     },
-    patientName:{
-        type: String
+    patientName: {
+      type: String,
     },
-    phone:{
-        type: String
+    phone: {
+      type: String,
     },
     emailAddress: {
-        type: String
+      type: String,
     },
-    dateOfBirth:{
-        type: String
+    dateOfBirth: {
+      type: String,
     },
     jenisPenyakit: {
-      type: String  
+      type: String,
     },
-    appointmentDate:{
-        type: String
+    appointmentDate: {
+      type: String,
     },
     message: {
-        type: String
+      type: String,
     },
-    patientComplaints:{
-        type: String
+    patientComplaints: {
+      type: String,
     },
     submissionDate: {
-        type: String
+      type: String,
     },
     clock: {
-        type: String
+      type: String,
     },
     isConfirm: {
-        type: Object
+      type: Object,
     },
     isNotif: {
-        type: Boolean
-    }
-},{
-    timestamps: true
-})
+      type: Boolean,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('servicing-hours', servicingHours)
+module.exports = mongoose.model("servicing-hours", servicingHours);

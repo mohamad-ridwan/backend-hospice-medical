@@ -1,11 +1,13 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const {
+  getAll,
+  postHeaderAllPage,
+  putHeaderAllPage,
+} = require("../controllers/headerPage");
 
-const useControllers = require('../controllers/headerPage')
+router.post("/post/header-all-page", postHeaderAllPage);
+router.put("/put/header-all-page/:_id", putHeaderAllPage);
+router.get("/get", getAll);
 
-router.post('/post/header-all-page', useControllers.postHeaderAllPage)
-router.put('/put/header-all-page/:_id', useControllers.putHeaderAllPage)
-router.get('/get', useControllers.getAll)
-
-module.exports = router
+module.exports = router;

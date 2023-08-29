@@ -1,10 +1,8 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const { get, post } = require("../controllers/blackListJwt");
 
-const blackListControllers = require('../controllers/blackListJwt')
+router.post("/post", post);
+router.get("/get", get);
 
-router.post('/post', blackListControllers.post)
-router.get('/get', blackListControllers.get)
-
-module.exports = router
+module.exports = router;

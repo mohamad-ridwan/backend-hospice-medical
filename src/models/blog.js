@@ -1,76 +1,80 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const blog = new Schema({
+const blog = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     title: {
-        type: String
+      type: String,
     },
     deskripsi: {
-        type: String
+      type: String,
     },
     image: {
-        type: String
+      type: String,
     },
-    paragraphSatu :{
-        type: String
+    paragraphSatu: {
+      type: String,
     },
-    paragraphBeforeHighlight:{
-        type: String
+    paragraphBeforeHighlight: {
+      type: String,
     },
-    paragraphHighlight:{
-        type: String
+    paragraphHighlight: {
+      type: String,
     },
-    paragraphDua:{
-        type: String
+    paragraphDua: {
+      type: String,
     },
-    category:{
-        type: String
+    category: {
+      type: String,
     },
     date: {
-        type: String
+      type: String,
     },
-    path:{
-        type: String
+    path: {
+      type: String,
     },
     comments: {
-        type: Array
+      type: Array,
     },
     data: {
-        type: Array
+      type: Array,
     },
     imageDetailContent: {
-        type: Object
+      type: Object,
     },
-    idCategory:{
-        type: String
+    idCategory: {
+      type: String,
     },
-    clock:{
-        type: String
+    clock: {
+      type: String,
     },
     idUserComment: {
-        type: String
+      type: String,
     },
     name: {
-        type: String
+      type: String,
     },
     email: {
-        type: String
+      type: String,
     },
-    subject:{
-        type: String
+    subject: {
+      type: String,
     },
     message: {
-        type: String
+      type: String,
     },
     times: {
-        type: String
-    }
-},{
-    timestamps: true
-})
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('blog', blog)
+module.exports = mongoose.model("blog", blog);

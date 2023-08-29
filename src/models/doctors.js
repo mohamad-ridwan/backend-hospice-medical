@@ -1,34 +1,38 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const doctors = new Schema({
+const doctors = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     title: {
-        type: String
+      type: String,
     },
     deskripsi: {
-        type: String
+      type: String,
     },
     data: {
-        type: Array
+      type: Array,
     },
     image: {
-        type: String
+      type: String,
     },
     name: {
-        type: String
+      type: String,
     },
     nameIcon: {
-        type: String
+      type: String,
     },
     path: {
-        type: String
-    }
-}, {
-    timestamps: true
-})
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('doctor', doctors)
+module.exports = mongoose.model("doctor", doctors);

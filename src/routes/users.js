@@ -1,12 +1,15 @@
-const express = require('express')
+const router = require("express").Router();
 
-const router = express.Router()
+const {
+  get,
+  post,
+  putIsVerification,
+  putUser,
+} = require("../controllers/users");
 
-const userControllers = require('../controllers/users')
+router.post("/post", post);
+router.put("/put/:userId", putIsVerification);
+router.put("/put/user/:id", putUser);
+router.get("/get", get);
 
-router.post('/post', userControllers.post)
-router.put('/put/:userId', userControllers.putIsVerification)
-router.put('/put/user/:id', userControllers.putUser)
-router.get('/get', userControllers.get)
-
-module.exports = router
+module.exports = router;

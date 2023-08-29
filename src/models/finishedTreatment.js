@@ -1,46 +1,50 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
-const finishedTreatment = new Schema({
+const finishedTreatment = new Schema(
+  {
     id: {
-        type: String
+      type: String,
+      unique: true,
     },
     rulesTreatment: {
-        type: String
+      type: String,
     },
     patientId: {
-        type: String
+      type: String,
     },
     patientName: {
-        type: String,
+      type: String,
     },
-    patientEmail:{
-        type: String
+    patientEmail: {
+      type: String,
     },
-    phone:{
-        type: String
+    phone: {
+      type: String,
     },
-    confirmedTime:{
-        type: Object
+    confirmedTime: {
+      type: Object,
     },
     dateConfirm: {
-        type: String
+      type: String,
     },
-    confirmHour:{
-        type: String
+    confirmHour: {
+      type: String,
     },
-    adminInfo:{
-        type: Object
+    adminInfo: {
+      type: Object,
     },
-    emailAdmin:{
-        type: String
+    emailAdmin: {
+      type: String,
     },
-    nameAdmin:{
-        type: String
-    }
-}, {
-    timestamps: true
-})
+    nameAdmin: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('finished-treatment', finishedTreatment)
+module.exports = mongoose.model("finished-treatment", finishedTreatment);
