@@ -485,8 +485,10 @@ exports.getAll = (req, res, next) => {
 };
 
 exports.getConfirmPatient = (req, res, next) => {
-  const documentId = req.params.documentId
+  const page = req.params.page
   const { currentPage = 1, pageSize = 5 } = req.query
+
+  let getConfirmId = []
 
   const getData = async (id) => {
     try {
@@ -497,28 +499,30 @@ exports.getConfirmPatient = (req, res, next) => {
     }
   }
 
-  getData('confirmation-patients')
+  if(page === 'confirmation-patients'){
+    getData('confirmation-patients')
     .then((resConf) => {
       const confirmId = resConf[0].data.map(item => ({ patientId: item.patientId }))
-      getData(documentId)
-        .then((resPatientRegis) => {
-          const currentRegister = resPatientRegis[0].data.filter(patient => {
-            const findPatient = confirmId.find(confPatient =>
-              confPatient.patientId === patient.id
-            )
-            return findPatient
-          })
-          return res.status(200).json({
-            data: pagination(
-              currentPage,
-              pageSize,
-              currentRegister
-            )
-          })
-        })
-        .catch(err => next(err))
+      getConfirmId = confirmId
+      return getData('patient-registration')
+    })
+    .then((resPatientRegis) => {
+      const currentRegister = resPatientRegis[0].data.filter(patient => {
+        const findPatient = getConfirmId.find(confPatient =>
+          confPatient.patientId === patient.id
+        )
+        return findPatient
+      })
+      return res.status(200).json({
+        data: pagination(
+          currentPage,
+          pageSize,
+          currentRegister
+        )
+      })
     })
     .catch(err => next(err))
+  }
 }
 
 exports.deletePatientRegistration = (req, res, next) => {

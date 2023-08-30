@@ -61,7 +61,7 @@ router.put(
   putAdminInfo
 );
 router.get("/get", getAll);
-router.get('/get/:documentId', getConfirmPatient)
+router.get('/get/data-table/:page', getConfirmPatient)
 router.delete(
   "/delete/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id",
   deletePatientRegistration
