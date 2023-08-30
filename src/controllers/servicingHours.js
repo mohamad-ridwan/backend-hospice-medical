@@ -1,5 +1,7 @@
 const servicingHours = require("../models/servicingHours");
 
+const { pagination } = require('../utils/pagination')
+
 exports.postServicing = (req, res, next) => {
   const id = req.body.id;
   const title = req.body.title;
@@ -481,6 +483,43 @@ exports.getAll = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
+
+exports.getConfirmPatient = (req, res, next) => {
+  const documentId = req.params.documentId
+  const { currentPage = 1, pageSize = 5 } = req.query
+
+  const getData = async (id) => {
+    try {
+      const data = await servicingHours.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
+  }
+
+  getData('confirmation-patients')
+    .then((resConf) => {
+      const confirmId = resConf[0].data.map(item => ({ patientId: item.patientId }))
+      getData(documentId)
+        .then((resPatientRegis) => {
+          const currentRegister = resPatientRegis[0].data.filter(patient => {
+            const findPatient = confirmId.find(confPatient =>
+              confPatient.patientId === patient.id
+            )
+            return findPatient
+          })
+          return res.status(200).json({
+            data: pagination(
+              currentPage,
+              pageSize,
+              currentRegister
+            )
+          })
+        })
+        .catch(err => next(err))
+    })
+    .catch(err => next(err))
+}
 
 exports.deletePatientRegistration = (req, res, next) => {
   const _id = req.params._id;
