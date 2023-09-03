@@ -25,7 +25,11 @@ const {
   getConfirmPatient,
   getPatientRegistration,
   getCounterInformation,
-  getTableCounterInfo
+  getTableCounterInfo,
+  getFinishedTreatment,
+  getOurDoctor,
+  getRooms,
+  getCounters
 } = require("../controllers/servicingHours");
 
 router.post("/post/servicing", postServicing);
@@ -67,7 +71,11 @@ router.get("/get", getAll);
 router.get('/get/data-table/patient-registration', getPatientRegistration)
 router.get('/get/data-table/confirmation-patients', getConfirmPatient)
 router.get('/get/data-table/drug-counter/:counterName/:status', getTableCounterInfo)
+router.get('/get/data-table/finished-treatment', getFinishedTreatment)
 router.get('/get/counter-information', getCounterInformation)
+router.get('/get/data-table/our-doctor', getOurDoctor)
+router.get('/get/data-table/rooms', getRooms)
+router.get('/get/data-table/counters', getCounters)
 router.delete(
   "/delete/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id",
   deletePatientRegistration

@@ -1,12 +1,17 @@
 const { HTTP_STATUS_CODE } = require("../constant");
 const servicingHours = require("../models/servicingHours");
+const doctors = require('../models/doctors')
 const { filterConfirmPatient } = require("../utils/filters/filterConfirmPatient");
 const { filterCounterInformation } = require("../utils/filters/filterCounterInformation");
+const { filterFinishTreatment } = require("../utils/filters/filterFinishTreatment");
+const { filterOurDoctor } = require("../utils/filters/filterOurDoctor");
 const { filterPatientRegistration } = require("../utils/filters/filterPatientRegistration");
 const { filterTableCounterInfo } = require("../utils/filters/filterTableCounterInfo");
 const { createDateNormalFormat } = require("../utils/formats/createDateNormalFormat");
 
-const { pagination, lastPage } = require('../utils/pagination')
+const { pagination, lastPage } = require('../utils/pagination');
+const { filterRooms } = require("../utils/filters/filterRooms");
+const { filterCounters } = require("../utils/filters/filterCounters");
 
 exports.postServicing = (req, res, next) => {
   const id = req.body.id;
@@ -842,6 +847,199 @@ exports.getTableCounterInfo = (req, res, next) => {
         pagination: {
           currentPage: currentPage,
           lastPage: lastPage(filter, pageSize),
+          totalData: data.totalData.length
+        }
+      })
+    })
+    .catch(err => next(err))
+}
+
+exports.getFinishedTreatment = (req, res, next) => {
+  const {
+    searchTxt = '',
+    filterBy = 'Filter By',
+    selectDate = '',
+    sortBy = 'Sort By',
+    currentPage = 1,
+    pageSize = 5
+  } = req.query
+
+  const getData = async (id) => {
+    try {
+      const data = await servicingHours.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
+  }
+  Promise.all([
+    getData('patient-registration'),
+    getData('finished-treatment'),
+    getData('confirmation-patients'),
+    getData('drug-counter'),
+    getData('info-loket'),
+  ])
+    .then(result => {
+      const data = filterFinishTreatment(
+        result[0][0].data,
+        result[1][0].data,
+        result[2][0].data,
+        result[3][0].data,
+        result[4][0].data,
+        searchTxt,
+        filterBy,
+        selectDate,
+        sortBy
+      )
+      res.status(HTTP_STATUS_CODE.OK).json({
+        message: 'sukses',
+        data: pagination(
+          currentPage,
+          pageSize,
+          data.filterData
+        ),
+        pagination: {
+          currentPage: currentPage,
+          lastPage: lastPage(data.filterData, pageSize),
+          totalData: data.totalData.length
+        }
+      })
+    })
+    .catch(err => next(err))
+}
+
+exports.getOurDoctor = (req, res, next) => {
+  const {
+    searchTxt = '',
+    filterBy = 'Filter By',
+    selectSpecialist = 'no filter',
+    currentPage = 1,
+    pageSize = 5
+  } = req.query
+
+  const getData = async (id) => {
+    try {
+      const data = await servicingHours.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
+  }
+  const getDataDoctor = async (id) => {
+    try {
+      const data = await doctors.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
+  }
+  Promise.all([
+    getDataDoctor('doctor'),
+    getData('room'),
+  ])
+    .then(result => {
+      const data = filterOurDoctor(
+        result[0][0].data,
+        result[1][0].data,
+        searchTxt,
+        filterBy,
+        selectSpecialist
+      )
+      res.status(HTTP_STATUS_CODE.OK).json({
+        message: 'sukses',
+        data: pagination(
+          currentPage,
+          pageSize,
+          data.filterData
+        ),
+        pagination: {
+          currentPage: currentPage,
+          lastPage: lastPage(data.filterData, pageSize),
+          totalData: data.totalData.length
+        }
+      })
+    })
+    .catch(err => next(err))
+}
+
+exports.getRooms = (req, res, next) => {
+  const {
+    searchTxt = '',
+    filterRoom = 'Select Room Type',
+    filterRoomActive = 'Select Room Active',
+    currentPage = 1,
+    pageSize = 5
+  } = req.query
+
+  const getData = async (id) => {
+    try {
+      const data = await servicingHours.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
+  }
+  getData('room')
+    .then(result => {
+      const data = filterRooms(
+        result[0].data,
+        searchTxt,
+        filterRoom,
+        filterRoomActive
+      )
+      res.status(HTTP_STATUS_CODE.OK).json({
+        message: 'sukses',
+        data: pagination(
+          currentPage,
+          pageSize,
+          data.filterResult
+        ),
+        pagination: {
+          currentPage: currentPage,
+          lastPage: lastPage(data.filterResult, pageSize),
+          totalData: data.totalData.length
+        }
+      })
+    })
+    .catch(err => next(err))
+}
+
+exports.getCounters = (req, res, next) => {
+  const {
+    searchTxt,
+    counterType = 'Select Counter Type',
+    roomActive = 'Select Room Active',
+    currentPage = 1,
+    pageSize = 5
+  } = req.query
+
+  const getData = async (id) => {
+    try {
+      const data = await servicingHours.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
+  }
+  getData('info-loket')
+    .then(result => {
+      const data = filterCounters(
+        result[0].data,
+        searchTxt,
+        counterType,
+        roomActive
+      )
+
+      res.status(HTTP_STATUS_CODE.OK).json({
+        message: 'sukses',
+        data: pagination(
+          currentPage,
+          pageSize,
+          data.filterData
+        ),
+        pagination: {
+          currentPage: currentPage,
+          lastPage: lastPage(data.filterData, pageSize),
           totalData: data.totalData.length
         }
       })
