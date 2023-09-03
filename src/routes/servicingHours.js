@@ -22,7 +22,10 @@ const {
   putServicing,
   putServicingData,
   updatePatientRegistration,
-  getConfirmPatient
+  getConfirmPatient,
+  getPatientRegistration,
+  getCounterInformation,
+  getTableCounterInfo
 } = require("../controllers/servicingHours");
 
 router.post("/post/servicing", postServicing);
@@ -61,7 +64,10 @@ router.put(
   putAdminInfo
 );
 router.get("/get", getAll);
-router.get('/get/data-table/:page', getConfirmPatient)
+router.get('/get/data-table/patient-registration', getPatientRegistration)
+router.get('/get/data-table/confirmation-patients', getConfirmPatient)
+router.get('/get/data-table/drug-counter/:counterName/:status', getTableCounterInfo)
+router.get('/get/counter-information', getCounterInformation)
 router.delete(
   "/delete/patient-registration-data/book-an-appointment/user-appointment-data/:_id/:id",
   deletePatientRegistration

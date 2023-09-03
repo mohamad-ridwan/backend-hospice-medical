@@ -1,6 +1,12 @@
+const { HTTP_STATUS_CODE } = require("../constant");
 const servicingHours = require("../models/servicingHours");
+const { filterConfirmPatient } = require("../utils/filters/filterConfirmPatient");
+const { filterCounterInformation } = require("../utils/filters/filterCounterInformation");
+const { filterPatientRegistration } = require("../utils/filters/filterPatientRegistration");
+const { filterTableCounterInfo } = require("../utils/filters/filterTableCounterInfo");
+const { createDateNormalFormat } = require("../utils/formats/createDateNormalFormat");
 
-const { pagination } = require('../utils/pagination')
+const { pagination, lastPage } = require('../utils/pagination')
 
 exports.postServicing = (req, res, next) => {
   const id = req.body.id;
@@ -484,11 +490,15 @@ exports.getAll = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-exports.getConfirmPatient = (req, res, next) => {
-  const page = req.params.page
-  const { currentPage = 1, pageSize = 5 } = req.query
-
-  let getConfirmId = []
+exports.getPatientRegistration = (req, res, next) => {
+  const {
+    searchTxt = '',
+    filterBy = 'Filter By',
+    selectDate = '',
+    sortBy = 'Sort By',
+    currentPage = 1,
+    pageSize = 5
+  } = req.query
 
   const getData = async (id) => {
     try {
@@ -499,30 +509,344 @@ exports.getConfirmPatient = (req, res, next) => {
     }
   }
 
-  if(page === 'confirmation-patients'){
-    getData('confirmation-patients')
-    .then((resConf) => {
-      const confirmId = resConf[0].data.map(item => ({ patientId: item.patientId }))
-      getConfirmId = confirmId
-      return getData('patient-registration')
-    })
-    .then((resPatientRegis) => {
-      const currentRegister = resPatientRegis[0].data.filter(patient => {
-        const findPatient = getConfirmId.find(confPatient =>
-          confPatient.patientId === patient.id
-        )
-        return findPatient
-      })
-      return res.status(200).json({
+  Promise.all([
+    getData('patient-registration'),
+    getData('confirmation-patients'),
+    getData('finished-treatment'),
+  ])
+    .then(result => {
+      const findRegistration = result[0][0].data.filter((patient => {
+        // patient already on confirm
+        const findPatientOnConfirm = result[1][0].data.find((patientConfirm) => patientConfirm.patientId === patient.id)
+        // patient at finish treatment
+        const findPatientFT = result[2][0].data.find((patientFT) => patientFT.patientId === patient.id)
+
+        return !findPatientOnConfirm && !findPatientFT
+      }))
+      function getRegis() {
+        if (findRegistration.length > 0) {
+          const registration = findRegistration.map((patient) => ({
+            id: patient.id,
+            data: [
+              {
+                name: patient.patientName
+              },
+              {
+                firstDesc: createDateNormalFormat(patient.appointmentDate),
+                color: '#ff296d',
+                colorName: '#777',
+                marginBottom: '4.5px',
+                fontSize: '12px',
+                filterBy: 'Appointment Date',
+                clock: patient.submissionDate.clock,
+                name: patient.appointmentDate,
+              },
+              {
+                firstDesc: createDateNormalFormat(patient.submissionDate.submissionDate),
+                colorName: '#777',
+                marginBottom: '4.5px',
+                fontSize: '12px',
+                filterBy: 'Submission Date',
+                clock: patient.submissionDate.clock,
+                name: patient.submissionDate.submissionDate,
+              },
+              {
+                name: patient.submissionDate.clock
+              },
+              {
+                name: patient.emailAddress
+              },
+              {
+                firstDesc: createDateNormalFormat(patient.dateOfBirth),
+                colorName: '#777',
+                marginBottom: '4.5px',
+                fontSize: '12px',
+                filterBy: 'Date of Birth',
+                name: patient.dateOfBirth,
+              },
+              {
+                name: patient.phone
+              },
+              {
+                name: ''
+              }
+            ]
+          }))
+          return registration
+        }
+        return []
+      }
+      const filter = filterPatientRegistration(
+        searchTxt,
+        filterBy,
+        selectDate,
+        sortBy,
+        getRegis()
+      )
+      res.status(HTTP_STATUS_CODE.OK).json({
+        message: 'sukses',
         data: pagination(
           currentPage,
           pageSize,
-          currentRegister
-        )
+          filter
+        ),
+        pagination: {
+          currentPage: currentPage,
+          lastPage: lastPage(filter, pageSize),
+          totalData: getRegis().length
+        }
       })
     })
     .catch(err => next(err))
+}
+
+exports.getConfirmPatient = (req, res, next) => {
+  const {
+    searchTxt = '',
+    roomBy = 'Filter By Room',
+    filterBy = 'Filter By',
+    selectDate = '',
+    sortBy = 'Sort By',
+    currentPage = 1,
+    pageSize = 5,
+  } = req.query
+
+  const getData = async (id) => {
+    try {
+      const data = await servicingHours.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
   }
+
+  Promise.all([
+    getData('patient-registration'),
+    getData('confirmation-patients'),
+    getData('drug-counter'),
+    getData('finished-treatment'),
+    getData('room'),
+  ])
+    .then(result => {
+      const findConfirmPatient = confirmPatientData(result[1][0].data)
+        .filter(patient => {
+          // patient regis
+          const findPatientRegis = dataPatientRegis(result[0][0].data)
+            .find(patientRegis => patientRegis.id === patient.patientId)
+          // patient in counter
+          const findPatientInCounter = dataPatientRegis(result[2][0].data)
+            .find(counterP => counterP.patientId === patient.patientId)
+          // patient at finish treatment
+          const findPatientFT = dataPatientRegis(result[3][0].data)
+            .find(patientFT => patientFT.patientId === patient.patientId)
+          return !findPatientFT && !findPatientInCounter && findPatientRegis
+        })
+
+      const patientRegis = result[0][0].data.filter(patientRegis => {
+        const findPatient = findConfirmPatient.find(confPatient =>
+          confPatient?.patientId === patientRegis?.id
+        )
+        return findPatient
+      })
+      return { patient: patientRegis, confirmPatient: findConfirmPatient, room: result[4][0].data }
+    })
+    .then(result => {
+      const dataTable = result.patient.map(patient => {
+        // patient already on confirm
+        const findPatientOnConfirm = result.confirmPatient.find(confirmPatient =>
+          confirmPatient.patientId === patient.id
+        )
+        // get room treatment of patient
+        const findRoomOfPatient = result.room.find(roomData => roomData.id === findPatientOnConfirm?.roomInfo?.roomId)
+
+        return {
+          id: patient.id,
+          data: [
+            {
+              name: patient.patientName
+            },
+            {
+              name: findRoomOfPatient?.room,
+              fontWeightName: 'bold',
+              filterRoom: true
+            },
+            {
+              name: findPatientOnConfirm?.roomInfo?.queueNumber,
+              colorName: '#ff296d',
+              fontWeightName: 'bold'
+            },
+            {
+              firstDesc: createDateNormalFormat(patient.appointmentDate),
+              color: '#288bbc',
+              colorName: '#777',
+              marginBottom: '4.5px',
+              fontSize: '12px',
+              filterBy: 'Appointment Date',
+              queueNumber: findPatientOnConfirm?.roomInfo?.queueNumber,
+              confirmHour: findPatientOnConfirm?.dateConfirmInfo?.confirmHour,
+              name: patient.appointmentDate,
+            },
+            {
+              name: findPatientOnConfirm?.dateConfirmInfo?.treatmentHours
+            },
+            {
+              firstDesc: createDateNormalFormat(findPatientOnConfirm?.dateConfirmInfo?.dateConfirm),
+              colorName: '#777',
+              marginBottom: '4.5px',
+              fontSize: '12px',
+              filterBy: 'Confirmation Date',
+              confirmHour: findPatientOnConfirm?.dateConfirmInfo?.confirmHour,
+              name: findPatientOnConfirm?.dateConfirmInfo?.dateConfirm,
+            },
+            {
+              name: findPatientOnConfirm?.dateConfirmInfo?.confirmHour
+            },
+            {
+              name: patient.emailAddress
+            },
+            {
+              firstDesc: createDateNormalFormat(patient.dateOfBirth),
+              colorName: '#777',
+              marginBottom: '4.5px',
+              fontSize: '12px',
+              filterBy: 'Date of Birth',
+              name: patient.dateOfBirth,
+            },
+            {
+              name: patient.phone
+            },
+            {
+              name: ''
+            }
+          ]
+        }
+      })
+      const filter = filterConfirmPatient(
+        searchTxt,
+        roomBy,
+        filterBy,
+        selectDate,
+        sortBy,
+        dataTable
+      )
+      res.status(HTTP_STATUS_CODE.OK).json({
+        message: 'sukses',
+        data: pagination(
+          currentPage,
+          pageSize,
+          filter
+        ),
+        pagination: {
+          currentPage: currentPage,
+          lastPage: lastPage(filter, pageSize),
+          totalData: dataTable.length
+        }
+      })
+    })
+    .catch(err => next(err))
+
+  function dataPatientRegis(data) {
+    if (data?.length > 0) {
+      return data
+    }
+    return []
+  }
+  function confirmPatientData(data) {
+    if (data?.length > 0) {
+      return data
+    }
+    return []
+  }
+}
+
+exports.getCounterInformation = (req, res, next) => {
+  const {
+    counter = 'Choose Counter',
+  } = req.query
+
+  const getData = async (id) => {
+    try {
+      const data = await servicingHours.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
+  }
+
+  Promise.all([
+    getData('drug-counter'),
+    getData('info-loket'),
+    getData('finished-treatment'),
+  ])
+    .then(result => {
+      const filter = filterCounterInformation(
+        counter,
+        result[0][0].data,
+        result[1][0].data,
+        result[2][0].data
+      )
+      res.status(HTTP_STATUS_CODE.OK).json({
+        message: 'sukses',
+        data: filter
+      })
+    })
+    .catch(err => next(err))
+}
+
+exports.getTableCounterInfo = (req, res, next) => {
+  const { counterName, status } = req.params
+  const {
+    searchTxt = '',
+    filterBy = 'Filter By',
+    sortBy = 'Sort By',
+    selectDate = '',
+    currentPage = 1,
+    pageSize = 5,
+  } = req.query
+
+  const getData = async (id) => {
+    try {
+      const data = await servicingHours.find({ id })
+      return data
+    } catch (error) {
+      return error
+    }
+  }
+  Promise.all([
+    getData('patient-registration'),
+    getData('drug-counter'),
+    getData('info-loket'),
+    getData('finished-treatment'),
+  ])
+    .then(result => {
+      const data = filterTableCounterInfo(
+        result[0][0].data,
+        result[1][0].data,
+        result[2][0].data,
+        result[3][0].data,
+        req.params,
+        searchTxt,
+        filterBy,
+        sortBy,
+        selectDate
+      )
+      const filter = data.dataFilter
+
+      res.status(HTTP_STATUS_CODE.OK).json({
+        message: 'sukses',
+        data: pagination(
+          currentPage,
+          pageSize,
+          filter
+        ),
+        pagination: {
+          currentPage: currentPage,
+          lastPage: lastPage(filter, pageSize),
+          totalData: data.totalData.length
+        }
+      })
+    })
+    .catch(err => next(err))
 }
 
 exports.deletePatientRegistration = (req, res, next) => {

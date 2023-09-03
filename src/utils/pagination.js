@@ -8,4 +8,9 @@ const pagination = (
     return data.slice(firstPage, lastPage)
 }
 
-module.exports = {pagination}
+const lastPage = (data, pageSize)=>{
+    const lastPage = data.length < 5 ? 1 : Math.ceil(data.length / pageSize)
+    return lastPage
+}
+
+module.exports = {pagination, lastPage}
