@@ -12,6 +12,6 @@ const fileStorage = multer.diskStorage({
 });
 
 const multerStorage = multer({ storage: fileStorage }).single("image");
-const multerPath = express.static(path.join(__dirname, "images"));
+const multerPath = express.static(path.join(__dirname, "../../images"));
 
 module.exports = { multerPath, multerStorage };

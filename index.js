@@ -4,7 +4,7 @@ const cors = require("cors");
 const dbConnection = require("./src/dbConnection");
 const errorHandler = require("./src/utils/errorHandler");
 const { customHeader } = require("./src/utils/middleawres");
-const { multerPath, multerStorage } = require("./src/utils/fileStorage");
+const { multerPath, multerStorage } = require("./src/utils/fileStorage")
 
 const app = express();
 
